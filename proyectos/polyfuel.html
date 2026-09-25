@@ -140,16 +140,21 @@
           Estudio integral de viabilidad técnica, económica y ambiental para la implantación de una planta industrial en Granadilla de Abona (Tenerife), transformando 14.000 t/año de residuos plásticos oceánicos en vectores energéticos alternativos B2B[cite: 2].
         </p>
 
-        <div class="pt-2 flex flex-wrap items-center gap-4">
-          <a href="../assets/docs/MEMORIA_FINAL_POLYFUEL.pdf" download class="inline-flex items-center gap-2.5 bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-medium px-6 py-3 rounded-xl transition-all shadow-lg shadow-cyan-500/20">
+        <div class="pt-2 flex flex-wrap items-center gap-3">
+          <a href="../assets/docs/MEMORIA_FINAL_POLYFUEL.pdf" download class="inline-flex items-center gap-2 bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-medium px-5 py-2.5 rounded-xl transition-all shadow-lg shadow-cyan-500/20 text-sm">
             <i data-lucide="file-text" class="w-4 h-4"></i>
-            Descargar Memoria Completa (PDF)
+            Descargar Memoria (PDF)
           </a>
-          <a href="#proceso" class="inline-flex items-center gap-2 border border-slate-700 hover:border-slate-500 text-slate-300 hover:text-white px-5 py-3 rounded-xl transition-colors">
-            Explorar Ingeniería Básica <i data-lucide="arrow-down" class="w-4 h-4"></i>
+          
+          <a href="../assets/docs/Presentacion_PolyFuel.pdf" download class="inline-flex items-center gap-2 border border-slate-700 hover:border-slate-500 bg-slate-900/60 text-slate-200 hover:text-white px-4 py-2.5 rounded-xl transition-colors text-sm">
+            <i data-lucide="presentation" class="w-4 h-4 text-emerald-400"></i>
+            Deck Ejecutivo (Slides)
+          </a>
+
+          <a href="#proceso" class="inline-flex items-center gap-1.5 text-slate-400 hover:text-cyan-400 px-3 py-2 text-xs font-mono transition-colors">
+            Ver Proceso <i data-lucide="arrow-down" class="w-3.5 h-3.5"></i>
           </a>
         </div>
-      </div>
 
       <!-- DIAGRAMA VECTORIAL SVG INTERACTIVO Y ANIMADO -->
       <div class="fade-up card-glass rounded-2xl p-5 sm:p-7 border border-slate-800 shadow-2xl relative overflow-hidden">
@@ -551,6 +556,163 @@
     </div>
   </div>
 
+  <!-- SECCIÓN: IMPACTO AMBIENTAL, ECONOMÍA CIRCULAR Y ODS -->
+  <section class="py-24 px-6 border-t border-slate-900 bg-slate-900/40 relative overflow-hidden">
+    <!-- Resplandor esmeralda de fondo -->
+    <div class="absolute bottom-0 right-0 w-[500px] h-[500px] bg-emerald-500/5 blur-[120px] rounded-full pointer-events-none"></div>
+
+    <div class="max-w-6xl mx-auto space-y-16 relative z-10">
+      <div class="fade-up max-w-3xl">
+        <span class="text-xs font-mono text-emerald-400 uppercase tracking-wider">Sostenibilidad & Taxonomía UE</span>
+        <h2 class="font-display text-3xl sm:text-4xl text-slate-100 font-bold mt-2">
+          De Pasivo Oceánico a Activo Energético Descarbonizado
+        </h2>
+        <p class="mt-4 text-slate-400 leading-relaxed">
+          La ingeniería de PolyFuel no se limita al rendimiento térmico; integra la evaluación sistemática de impactos ambientales mediante Matriz de Leopold, soluciones de vertido cero mediante EDARI y la trazabilidad ESG requerida para la financiación comunitaria.
+        </p>
+      </div>
+
+      <!-- GRID DE LOS 3 PILARES AMBIENTALES -->
+      <div class="grid md:grid-cols-3 gap-6 fade-up">
+        
+        <!-- Tarjeta 1: Mitigación & Matriz de Leopold (con visor modal) -->
+        <div class="card-glass rounded-2xl p-7 space-y-4 border-t-2 border-t-emerald-400 flex flex-col justify-between">
+          <div class="space-y-4">
+            <div class="flex items-center justify-between">
+              <div class="w-10 h-10 rounded-xl bg-emerald-400/10 flex items-center justify-center text-emerald-400">
+                <i data-lucide="activity" class="w-5 h-5"></i>
+              </div>
+              <button id="openLeopoldModal" type="button" onclick="openLeopold()" class="inline-flex items-center gap-1.5 text-xs font-mono text-emerald-400 hover:text-emerald-300 bg-emerald-950/40 border border-emerald-500/30 px-2.5 py-1 rounded-lg transition-colors cursor-pointer">
+                <i data-lucide="eye" class="w-3.5 h-3.5"></i> Ver matriz completa
+              </button>
+            </div>
+            
+            <h3 class="font-display text-lg font-bold text-slate-100">Matriz de Leopold & Mitigación</h3>
+            <p class="text-xs text-slate-400 leading-relaxed">
+              Evaluación sistemática de 20 factores ambientales cruzados con las acciones de obra, operación y desmantelamiento. Permite justificar las medidas correctoras de ruido, emisiones y vertidos ante el órgano ambiental.
+            </p>
+          </div>
+
+          <div class="pt-3 text-[11px] font-mono text-slate-500 border-t border-slate-800 space-y-1">
+            <p>· 20 factores evaluados (Medio físico, biótico y social)</p>
+            <p>· Mitigación acústica y acoplamiento eólico directo</p>
+          </div>
+        </div>
+
+        <!-- Tarjeta 2: Huella Hídrica y EDARI -->
+        <div class="card-glass rounded-2xl p-7 space-y-4 border-t-2 border-t-cyan-400">
+          <div class="w-10 h-10 rounded-xl bg-cyan-400/10 flex items-center justify-center text-cyan-400">
+            <i data-lucide="droplet" class="w-5 h-5"></i>
+          </div>
+          <h3 class="font-display text-lg font-bold text-slate-100">Cierre del Ciclo Hídrico (EDARI)</h3>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            El lavado en caliente con disolución de NaOH genera 18 m³/h de efluente fuertemente salino. La planta depuradora interna recupera aceites residuales para el reactor y recircula el 70% del caudal, ahorrando 120.000 m³/año de agua dulce en Tenerife.
+          </p>
+          <div class="pt-2 text-[11px] font-mono text-slate-500 border-t border-slate-800">
+            <span>· Ahorro hídrico: 120.000 m³/año</span><br>
+            <span>· Neutralización de pH previa a vertido inocuo</span>
+          </div>
+        </div>
+
+        <!-- Tarjeta 3: Retirada de Microplásticos -->
+        <div class="card-glass rounded-2xl p-7 space-y-4 border-t-2 border-t-teal-400">
+          <div class="w-10 h-10 rounded-xl bg-teal-400/10 flex items-center justify-center text-teal-400">
+            <i data-lucide="waves" class="w-5 h-5"></i>
+          </div>
+          <h3 class="font-display text-lg font-bold text-slate-100">Intercepción en Giro Oceánico</h3>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            La intercepción de 14.000 t/año en el Gran Parche del Atlántico Norte previene la fragmentación mecánica y fotoquímica de macroplásticos en micropartículas irreversibles, protegiendo las redes tróficas marinas y la biodiversidad costera canaria.
+          </p>
+          <div class="pt-2 text-[11px] font-mono text-slate-500 border-t border-slate-800">
+            <span>· Alianza con The Ocean Cleanup / Innoceana</span><br>
+            <span>· Certificación de origen sostenible para navieras</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- MAPEO DE LOS 5 ODS (AGENDA 2030) -->
+      <div class="card-glass rounded-3xl p-8 fade-up space-y-6">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-4">
+          <div>
+            <h3 class="font-display text-xl font-bold text-slate-100 flex items-center gap-2">
+              <i data-lucide="globe" class="w-5 h-5 text-emerald-400"></i> Alineación Estratégica con los ODS (Agenda 2030)
+            </h3>
+            <p class="text-xs text-slate-400 mt-1">Contribución tangible justificada en la memoria para el acceso a Fondos FEDER e Innovation Fund</p>
+          </div>
+          <span class="text-xs font-mono text-emerald-400 bg-emerald-950/40 border border-emerald-500/30 px-3 py-1 rounded-full w-fit">
+            5 Objetivos Clave
+          </span>
+        </div>
+
+        <div class="grid sm:grid-cols-2 lg:grid-cols-5 gap-4">
+          
+          <!-- ODS 7 -->
+          <div class="p-4 rounded-xl bg-slate-900/60 border border-slate-800 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold font-mono text-amber-400">ODS 7</span>
+              <i data-lucide="zap" class="w-4 h-4 text-amber-400"></i>
+            </div>
+            <p class="text-xs font-semibold text-slate-200">Energía Asequible</p>
+            <p class="text-[11px] text-slate-400 leading-snug">
+              Sustitución parcial de combustibles fósiles importados en Canarias por vectores sintéticos circulares.
+            </p>
+          </div>
+
+          <!-- ODS 8 -->
+          <div class="p-4 rounded-xl bg-slate-900/60 border border-slate-800 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold font-mono text-rose-400">ODS 8</span>
+              <i data-lucide="trending-up" class="w-4 h-4 text-rose-400"></i>
+            </div>
+            <p class="text-xs font-semibold text-slate-200">Trabajo Decente</p>
+            <p class="text-[11px] text-slate-400 leading-snug">
+              Diversificación industrial en Tenerife y creación de 52 empleos estables técnicos y de operación.
+            </p>
+          </div>
+
+          <!-- ODS 12 -->
+          <div class="p-4 rounded-xl bg-slate-900/60 border border-slate-800 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold font-mono text-amber-500">ODS 12</span>
+              <i data-lucide="repeat" class="w-4 h-4 text-amber-500"></i>
+            </div>
+            <p class="text-xs font-semibold text-slate-200">Producción Circular</p>
+            <p class="text-[11px] text-slate-400 leading-snug">
+              Revalorización química integral de residuos sin dueño evitando vertederos o incineración.
+            </p>
+          </div>
+
+          <!-- ODS 13 -->
+          <div class="p-4 rounded-xl bg-slate-900/60 border border-slate-800 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold font-mono text-emerald-400">ODS 13</span>
+              <i data-lucide="cloud-sun" class="w-4 h-4 text-emerald-400"></i>
+            </div>
+            <p class="text-xs font-semibold text-slate-200">Acción por el Clima</p>
+            <p class="text-[11px] text-slate-400 leading-snug">
+              Pirólisis sin combustión, autosuficiencia térmica y trituración 100% acoplada a energía eólica.
+            </p>
+          </div>
+
+          <!-- ODS 14 -->
+          <div class="p-4 rounded-xl bg-slate-900/60 border border-slate-800 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold font-mono text-cyan-400">ODS 14</span>
+              <i data-lucide="fish" class="w-4 h-4 text-cyan-400"></i>
+            </div>
+            <p class="text-xs font-semibold text-slate-200">Vida Submarina</p>
+            <p class="text-[11px] text-slate-400 leading-snug">
+              Retirada anual directa de 14.000 t de plásticos oceánicos, protegiendo la biodiversidad pelágica.
+            </p>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </section>
+
   <!-- FOOTER NAVEGACIÓN -->
   <footer class="py-16 px-6 border-t border-slate-900 bg-slate-950">
     <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-6">
@@ -752,6 +914,64 @@
         }
       }
     });
+  // Funciones globales para abrir y cerrar el modal de Leopold
+  function openLeopold() {
+    const modal = document.getElementById('leopoldModal');
+    if (!modal) return;
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+    document.body.style.overflow = 'hidden';
+    lucide.createIcons(); // Vuelve a refrescar los iconos dentro del modal
+  }
+
+  function closeLeopold() {
+    const modal = document.getElementById('leopoldModal');
+    if (!modal) return;
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+    document.body.style.overflow = '';
+  }
+
+  // Cerrar al pulsar fuera del contenido
+  document.getElementById('leopoldModal')?.addEventListener('click', function(e) {
+    if (e.target === this) {
+      closeLeopold();
+    }
+  });
+
+  // Cerrar con la tecla Escape
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      closeLeopold();
+    }
+  });
   </script>
+  <!-- MODAL / LIGHTBOX PARA LA MATRIZ DE LEOPOLD -->
+  <div id="leopoldModal" class="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-md hidden items-center justify-center p-4 sm:p-8 transition-opacity duration-300">
+    <div class="relative max-w-5xl w-full max-h-[92vh] flex flex-col items-center">
+      
+      <!-- Barra superior del modal -->
+      <div class="w-full flex justify-between items-center mb-3 text-xs font-mono text-slate-400 px-1">
+        <span class="flex items-center gap-2 text-emerald-400 font-semibold">
+          <i data-lucide="table-2" class="w-4 h-4"></i> Matriz de Leopold: Identificación y Valoración de Impactos Ambientales
+        </span>
+        <button type="button" onclick="closeLeopold()" class="text-slate-400 hover:text-white flex items-center gap-1 transition-colors cursor-pointer">
+          <span>Cerrar (Esc)</span>
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+      
+      <!-- Contenedor con scroll para ver la imagen -->
+      <div class="w-full rounded-2xl overflow-hidden border border-slate-800 bg-slate-900 shadow-2xl p-2 max-h-[80vh] overflow-auto">
+        <img src="../assets/img/polyfuel-matriz-leopold.png" alt="Matriz de Leopold PolyFuel" class="w-full h-auto min-w-[750px] object-contain rounded-lg">
+      </div>
+      
+      <!-- Pie explicativo -->
+      <div class="w-full p-3 bg-slate-950/90 mt-2 rounded-xl border border-slate-800 text-[11px] font-mono flex flex-wrap justify-between items-center gap-2 text-slate-400">
+        <span>Evaluación de fases: Construcción, Explotación y Cierre.</span>
+        <span class="text-emerald-400">Mitigación: EDARI (agua), parque eólico (energía) y recirculación térmica.</span>
+      </div>
+    </div>
+  </div>
 </body>
 </html>
