@@ -571,10 +571,23 @@
   });
 
   // Scroll reveal
+  // CÓDIGO NUEVO (Se anima siempre al entrar y salir del scroll)
   const revealEls = document.querySelectorAll('.fade-up');
   const io = new IntersectionObserver((entries) => {
-    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
-  }, { threshold: 0.15 });
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('in');
+      } else {
+        // Si la sección sale del visor (por arriba o por abajo), se reinicia
+        // Opcional: solo si quieres que vuelva a ocultarse al salir de pantalla
+        e.target.classList.remove('in');
+      }
+    });
+  }, { 
+    threshold: 0.12, // Se activa cuando al menos el 12% del bloque es visible
+    rootMargin: "0px 0px -50px 0px" // Da un margen natural antes de activarse
+  });
+
   revealEls.forEach(el => io.observe(el));
 
   // Project filter

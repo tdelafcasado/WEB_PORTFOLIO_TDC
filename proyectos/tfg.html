@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ChemExchange — Plataforma B2B & RAG AI | Tomás</title>
+  <meta name="description" content="Diseño y desarrollo de ecosistema digital B2B para la valorización material y simbiosis industrial en el sector químico. Arquitectura PHP/MySQL, cURL y asistente RAG con Google Gemini.">
+  
+  <!-- Tailwind CSS & Lucide Icons -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Chart.js vía CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+  <!-- Fuentes Google: Space Grotesk, Inter, JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ['Space Grotesk', 'sans-serif'],
+            body: ['Inter', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            cyan: { 400: '#22d3ee', 500: '#06b6d4', 950: '#083344' },
+            emerald: { 400: '#34d399', 500: '#10b981', 950: '#064e3b' },
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    html { scroll-padding-top: 90px; }
+    body { background-color: #020617; }
+    ::selection { background-color: #3b82f6; color: #020617; }
+
+    .grain {
+      background-image: radial-gradient(circle at 1px 1px, rgba(148,163,184,0.07) 1px, transparent 0);
+      background-size: 24px 24px;
+    }
+
+    .glass {
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+
+    .card-glass {
+      background: linear-gradient(180deg, rgba(30,41,59,0.55), rgba(15,23,42,0.65));
+      border: 1px solid rgba(148,163,184,0.12);
+    }
+
+    /* Animación estándar idéntica al index.html */
+    .fade-up { 
+      opacity: 0; 
+      transform: translateY(16px); 
+      transition: opacity .7s ease, transform .7s ease; 
+    }
+    .fade-up.in { 
+      opacity: 1; 
+      transform: translateY(0); 
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .fade-up { transition: none; opacity: 1; transform: none; }
+    }
+
+    .tech-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      color: #94a3b8;
+      background: rgba(148,163,184,0.08);
+      border: 1px solid rgba(148,163,184,0.15);
+      padding: 0.25rem 0.65rem;
+      border-radius: 0.4rem;
+    }
+
+    .num-tabular { font-variant-numeric: tabular-nums; }
+
+    /* Flujo de datos asíncrono en SVG */
+    .flow-stream {
+      stroke-dasharray: 6 6;
+      animation: dataFlow 2.2s linear infinite;
+    }
+    @keyframes dataFlow {
+      to { stroke-dashoffset: -24; }
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-300 font-body antialiased grain">
+
+  <!-- NAVBAR FLOTANTE -->
+  <header id="navbar" class="fixed top-0 inset-x-0 z-40 transition-all duration-300">
+    <div class="max-w-6xl mx-auto px-6">
+      <div id="navInner" class="mt-4 rounded-2xl glass border border-slate-800/70 px-5 py-3 flex items-center justify-between transition-all duration-300">
+        <a href="../index.html" class="inline-flex items-center gap-2 text-sm font-medium text-slate-300 hover:text-blue-400 transition-colors group">
+          <i data-lucide="arrow-left" class="w-4 h-4 group-hover:-translate-x-1 transition-transform"></i>
+          Volver al portfolio
+        </a>
+        <div class="flex items-center gap-3">
+          <span class="text-xs font-mono text-slate-500 hidden sm:inline-block">Trabajo Fin de Grado</span>
+          <span class="w-1.5 h-1.5 rounded-full bg-blue-400"></span>
+          <span class="text-xs font-mono text-blue-400">ChemExchange Core</span>
+        </div>
+        <a href="../assets/docs/TFG_ChemExchange.pdf" download class="inline-flex items-center gap-2 bg-blue-500 hover:bg-blue-400 text-slate-950 text-xs font-semibold px-3.5 py-1.5 rounded-lg transition-colors">
+          <i data-lucide="download" class="w-3.5 h-3.5"></i>
+          Descargar Memoria (PDF)
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO SECTION -->
+  <section class="relative pt-36 pb-20 px-6 overflow-hidden">
+    <div class="absolute -top-24 right-[-10%] w-[500px] h-[500px] rounded-full bg-blue-500/10 blur-[120px] pointer-events-none"></div>
+    <div class="absolute top-1/2 left-[-15%] w-[420px] h-[420px] rounded-full bg-emerald-500/10 blur-[120px] pointer-events-none"></div>
+
+    <div class="max-w-6xl mx-auto space-y-12">
+      <div class="fade-up space-y-6 max-w-4xl">
+        <div class="flex flex-wrap items-center gap-3">
+          <span class="inline-flex items-center gap-1.5 text-xs font-mono text-blue-400 border border-blue-400/30 bg-blue-400/5 rounded-full px-3 py-1">
+            <i data-lucide="award" class="w-3.5 h-3.5"></i> Grado en Ingeniería Química UPM
+          </span>
+          <span class="text-xs font-mono text-slate-500 border border-slate-800 rounded-full px-3 py-1">
+            Full-Stack PHP / MySQL
+          </span>
+          <span class="text-xs font-mono text-slate-500 border border-slate-800 rounded-full px-3 py-1">
+            RAG AI Architecture
+          </span>
+        </div>
+
+        <h1 class="font-display text-4xl sm:text-6xl text-slate-100 font-bold tracking-tight leading-[1.1]">
+          Ecosistema B2B para la Simbiosis y Valorización en la Industria Química
+        </h1>
+
+        <p class="text-lg sm:text-xl text-slate-400 leading-relaxed max-w-3xl">
+          Diseño e implementación de <b>ChemExchange</b>: plataforma web transaccional orientada al intercambio seguro de subproductos químicos y residuos valorizables, combinando persistencia relacional en 3FN, control de transporte ADR y un asistente conversacional RAG acoplado a base de datos.
+        </p>
+
+        <div class="pt-2 flex flex-wrap items-center gap-4">
+          <a href="../assets/docs/TFG_ChemExchange.pdf" download class="inline-flex items-center gap-2.5 bg-blue-500 hover:bg-blue-400 text-slate-950 font-medium px-6 py-3 rounded-xl transition-all shadow-lg shadow-blue-500/20">
+            <i data-lucide="file-text" class="w-4 h-4"></i>
+            Descargar Memoria Completa (PDF)
+          </a>
+          <a href="#arquitectura" class="inline-flex items-center gap-2 border border-slate-700 hover:border-slate-500 text-slate-300 hover:text-white px-5 py-3 rounded-xl transition-colors">
+            Explorar Arquitectura & RAG <i data-lucide="arrow-down" class="w-4 h-4"></i>
+          </a>
+        </div>
+      </div>
+
+      <!-- VISOR PRINCIPAL: GALERÍA INTERACTIVA DE PANTALLAS CHEMEXCHANGE -->
+      <div class="fade-up card-glass rounded-2xl p-5 sm:p-7 border border-slate-800 shadow-2xl relative overflow-hidden">
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-4 border-b border-slate-800 pb-3">
+          
+          <!-- Pestañas para alternar pantallas -->
+          <div class="flex flex-wrap items-center gap-2 bg-slate-900/80 p-1.5 rounded-xl border border-slate-800/80">
+            <button id="tabBtnCatalog" onclick="switchTfgView('catalog')" class="px-3 py-1.5 rounded-lg text-xs font-mono font-medium transition-colors bg-blue-500 text-slate-950 cursor-pointer">
+              <i data-lucide="layout-grid" class="w-3.5 h-3.5 inline mr-1"></i> 1. Catálogo B2B
+            </button>
+            <button id="tabBtnDetail" onclick="switchTfgView('detail')" class="px-3 py-1.5 rounded-lg text-xs font-mono font-medium transition-colors text-slate-400 hover:text-slate-200 cursor-pointer">
+              <i data-lucide="file-text" class="w-3.5 h-3.5 inline mr-1"></i> 2. Ficha Analítica
+            </button>
+            <button id="tabBtnPublicar" onclick="switchTfgView('publicar')" class="px-3 py-1.5 rounded-lg text-xs font-mono font-medium transition-colors text-slate-400 hover:text-slate-200 cursor-pointer">
+              <i data-lucide="plus-circle" class="w-3.5 h-3.5 inline mr-1"></i> 3. Publicar Lote (CLP)
+            </button>
+            <button id="tabBtnChembot" onclick="switchTfgView('chembot')" class="px-3 py-1.5 rounded-lg text-xs font-mono font-medium transition-colors text-slate-400 hover:text-slate-200 cursor-pointer">
+              <i data-lucide="bot" class="w-3.5 h-3.5 inline mr-1"></i> 4. Asistente RAG AI
+            </button>
+          </div>
+
+          <button onclick="openCurrentTfgModal()" class="inline-flex items-center gap-1.5 text-xs font-mono text-blue-400 hover:text-blue-300 cursor-pointer self-end lg:self-auto">
+            <i data-lucide="maximize-2" class="w-3.5 h-3.5"></i> Ampliar vista activa (HD)
+          </button>
+        </div>
+
+        <!-- VISTA 1: CATÁLOGO PRINCIPAL -->
+        <div id="viewCatalog" onclick="openModal('catalogModal')" class="rounded-xl overflow-hidden border border-slate-800 bg-slate-950/80 cursor-zoom-in group relative">
+          <img src="../assets/img/tfg-chemexchange-catalog.png" alt="Catálogo General ChemExchange" class="w-full h-auto object-contain max-h-[460px] group-hover:scale-[1.01] transition-transform duration-300">
+          <div class="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 text-white font-mono text-xs">
+            <i data-lucide="zoom-in" class="w-5 h-5 text-blue-400"></i> Clic para inspeccionar catálogo y filtros dinámicos
+          </div>
+        </div>
+
+        <!-- VISTA 2: FICHA DETALLE TÉCNICO -->
+        <div id="viewDetail" onclick="openModal('detailModal')" class="hidden rounded-xl overflow-hidden border border-slate-800 bg-slate-950/80 cursor-zoom-in group relative">
+          <img src="../assets/img/tfg-chemexchange-detail.png" alt="Ficha Técnica de Subproducto ChemExchange" class="w-full h-auto object-contain max-h-[460px] group-hover:scale-[1.01] transition-transform duration-300">
+          <div class="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 text-white font-mono text-xs">
+            <i data-lucide="zoom-in" class="w-5 h-5 text-blue-400"></i> Clic para ver especificaciones de pureza, pH y clasificación CLP
+          </div>
+        </div>
+
+        <!-- VISTA 3: PUBLICACIÓN DE OFERTA -->
+        <div id="viewPublicar" onclick="openModal('publicarModal')" class="hidden rounded-xl overflow-hidden border border-slate-800 bg-slate-950/80 cursor-zoom-in group relative">
+          <img src="../assets/img/tfg-chemexchange-publicar.png" alt="Formulario de Publicación Técnica ChemExchange" class="w-full h-auto object-contain max-h-[460px] group-hover:scale-[1.01] transition-transform duration-300">
+          <div class="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 text-white font-mono text-xs">
+            <i data-lucide="zoom-in" class="w-5 h-5 text-blue-400"></i> Clic para ver formulario técnico y validación de atributos
+          </div>
+        </div>
+
+        <!-- VISTA 4: ASISTENTE VIRTUAL CHEMBOT -->
+        <div id="viewChembot" onclick="openModal('chembotModal')" class="hidden rounded-xl overflow-hidden border border-slate-800 bg-slate-950/80 cursor-zoom-in group relative">
+          <img src="../assets/img/tfg-chemexchange-chembot.png" alt="Asistente Conversacional ChemBot RAG" class="w-full h-auto object-contain max-h-[460px] group-hover:scale-[1.01] transition-transform duration-300">
+          <div class="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 text-white font-mono text-xs">
+            <i data-lucide="zoom-in" class="w-5 h-5 text-blue-400"></i> Clic para inspeccionar diálogo RAG y enlaces dinámicos
+          </div>
+        </div>
+
+        <p class="text-xs text-slate-500 text-center mt-3 font-mono">
+          Ecosistema integral ChemExchange: exploración multi-filtro $\rightarrow$ verificación analítica $\rightarrow$ alta de corrientes $\rightarrow$ consultoría contextual RAG.
+        </p>
+      </div>
+
+      <!-- KPI METRICS GRID -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 fade-up">
+        <div class="card-glass rounded-2xl p-6">
+          <p class="text-xs font-mono text-slate-500 uppercase tracking-wider mb-2">Latencia Servidor</p>
+          <p class="font-display text-3xl sm:text-4xl text-slate-100 font-bold num-tabular">17 <span class="text-base text-blue-400 font-normal">ms</span></p>
+          <p class="text-xs text-slate-400 mt-2">Pruebas DevTools (595 ms bajo Slow 4G forzado)</p>
+        </div>
+
+        <div class="card-glass rounded-2xl p-6">
+          <p class="text-xs font-mono text-slate-500 uppercase tracking-wider mb-2">Base de Datos</p>
+          <p class="font-display text-3xl sm:text-4xl text-emerald-400 font-bold num-tabular">3FN <span class="text-base text-slate-200 font-normal">InnoDB</span></p>
+          <p class="text-xs text-slate-400 mt-2">Transacciones ACID y CASCADE selectivo</p>
+        </div>
+
+        <div class="card-glass rounded-2xl p-6">
+          <p class="text-xs font-mono text-slate-500 uppercase tracking-wider mb-2">Asistente Inteligente</p>
+          <p class="font-display text-3xl sm:text-4xl text-slate-100 font-bold num-tabular">RAG <span class="text-base text-blue-400 font-normal">Live</span></p>
+          <p class="text-xs text-slate-400 mt-2">Gemini Flash con contexto SQL en tiempo real</p>
+        </div>
+
+        <div class="card-glass rounded-2xl p-6">
+          <p class="text-xs font-mono text-slate-500 uppercase tracking-wider mb-2">Ciberseguridad</p>
+          <p class="font-display text-3xl sm:text-4xl text-slate-100 font-bold num-tabular">Bcrypt <span class="text-base text-blue-400 font-normal">PDO</span></p>
+          <p class="text-xs text-slate-400 mt-2">Prepared statements anti-SQLi y hashes asimétricos</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EL DOBLE CANAL NORMATIVO (LEY 7/2022) -->
+  <section class="py-24 px-6 border-t border-slate-900 bg-slate-900/30">
+    <div class="max-w-6xl mx-auto space-y-16">
+      <div class="fade-up max-w-3xl">
+        <span class="text-xs font-mono text-blue-400 uppercase tracking-wider">Fundamento Jurídico & Químico</span>
+        <h2 class="font-display text-3xl sm:text-4xl text-slate-100 font-bold mt-2">
+          El Doble Canal Normativo: Subproducto vs. Residuo
+        </h2>
+        <p class="mt-4 text-slate-400 leading-relaxed">
+          En la industria química, la frontera legal entre residuo y subproducto determina la viabilidad de una transacción. ChemExchange implementa en su lógica de backend las directrices de la Ley 7/2022 y los reglamentos europeos de seguridad de sustancias.
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-8 fade-up">
+        
+        <!-- Canal 1: Prevención -->
+        <div class="card-glass rounded-3xl p-8 space-y-5 border-t-2 border-t-emerald-400">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-mono text-emerald-400 bg-emerald-950/40 border border-emerald-500/30 px-3 py-1 rounded-full">
+              Canal de Prevención (Nivel 1)
+            </span>
+            <i data-lucide="shield-check" class="w-5 h-5 text-emerald-400"></i>
+          </div>
+          <h3 class="font-display text-2xl font-bold text-slate-100">Régimen de Subproducto (Art. 4)</h3>
+          <p class="text-sm text-slate-400 leading-relaxed">
+            Aplica a corrientes secundarias integradas en el proceso que poseen certeza de uso posterior sin transformación no convencional. El catálogo digital ofrece a la empresa emisora la garantía contractual de destino inmediato, evitando que el material reciba un código LER y sea catalogado legalmente como residuo.
+          </p>
+          <div class="p-4 rounded-xl bg-slate-900/70 border border-slate-800 text-xs font-mono text-slate-300 space-y-1">
+            <p>· Reintroducción directa como materia prima secundaria</p>
+            <p>· Supresión de tasas e intermediarios de eliminación</p>
+            <p>· Máxima jerarquía de gestión europea (Pirámide invertida)</p>
+          </div>
+        </div>
+
+        <!-- Canal 2: Valorización -->
+        <div class="card-glass rounded-3xl p-8 space-y-5 border-t-2 border-t-blue-400">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-mono text-blue-400 bg-blue-950/40 border border-blue-500/30 px-3 py-1 rounded-full">
+              Canal de Valorización (Nivel 3)
+            </span>
+            <i data-lucide="refresh-cw" class="w-5 h-5 text-blue-400"></i>
+          </div>
+          <h3 class="font-display text-2xl font-bold text-slate-100">Desclasificación Jurídica (Art. 5)</h3>
+          <p class="text-sm text-slate-400 leading-relaxed">
+            Aplica a materiales que ya fueron tipificados como residuo con código LER. ChemExchange acredita los requisitos para declarar el <i>Fin de Condición de Residuo</i> al documentar técnicamente la existencia de demanda de mercado, especificaciones analíticas (pH, pureza) y cumplimiento del Reglamento REACH.
+          </p>
+          <div class="p-4 rounded-xl bg-slate-900/70 border border-slate-800 text-xs font-mono text-slate-300 space-y-1">
+            <p>· Generación automática de orden de recogida ADR</p>
+            <p>· Etiquetado de riesgo bajo Reglamento CLP</p>
+            <p>· Trazabilidad documental para auditorías ambientales</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- MODELO DE DATOS RELACIONAL (E-R) & CIBERSEGURIDAD -->
+  <section class="py-24 px-6 border-t border-slate-900 bg-slate-900/20">
+    <div class="max-w-6xl mx-auto space-y-16">
+      <div class="fade-up max-w-3xl">
+        <span class="text-xs font-mono text-emerald-400 uppercase tracking-wider">Persistencia & Integridad</span>
+        <h2 class="font-display text-3xl sm:text-4xl text-slate-100 font-bold mt-2">
+          Modelo Entidad-Relación (3FN) & Arquitectura de Seguridad
+        </h2>
+        <p class="mt-4 text-slate-400 leading-relaxed">
+          Diseño del esquema de base de datos relacional sobre el motor <b>InnoDB</b> de MySQL, normalizado en Tercera Forma Normal (3FN) para eliminar redundancias operativas y parametrizado para garantizar la trazabilidad analítica de las sustancias químicas.
+        </p>
+      </div>
+
+      <!-- GRID VISOR E-R + CARACTERÍSTICAS -->
+      <div class="grid lg:grid-cols-12 gap-8 items-center fade-up">
+        
+        <!-- VISOR LIGHTBOX DEL DIAGRAMA E-R -->
+        <div class="lg:col-span-6 card-glass rounded-2xl p-4 border border-slate-800 space-y-3">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-2 text-xs font-mono">
+            <span class="text-slate-200 font-semibold">Diagrama Entidad-Relación (Chen / UML)</span>
+            <button onclick="openModal('erModal')" class="text-emerald-400 hover:text-emerald-300 flex items-center gap-1 cursor-pointer">
+              <i data-lucide="zoom-in" class="w-3.5 h-3.5"></i> Ampliar esquema
+            </button>
+          </div>
+          
+          <div onclick="openModal('erModal')" class="rounded-xl overflow-hidden border border-slate-800 bg-white p-3 cursor-zoom-in group relative flex items-center justify-center">
+            <img src="../assets/img/tfg-diagrama-er.png" alt="Diagrama Entidad Relacion ChemExchange" class="w-full h-auto object-contain max-h-[380px] rounded group-hover:scale-[1.01] transition-transform duration-300">
+            <div class="absolute inset-0 bg-slate-950/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 text-white font-mono text-xs">
+              <i data-lucide="zoom-in" class="w-5 h-5 text-emerald-400"></i> Clic para inspeccionar entidades y cardinalidades
+            </div>
+          </div>
+          
+          <p class="text-[11px] text-slate-500 text-center font-mono">
+            Estructura relacional: Clientes (1:N) Productos, Clientes (1:N) Pedidos y relación asociativa detalle_pedido (N:M).
+          </p>
+        </div>
+
+        <!-- DETALLES DE INTEGRIDAD Y RESTRICCIONES DE CLAVE -->
+        <div class="lg:col-span-6 space-y-4">
+          <div class="card-glass rounded-2xl p-6 space-y-2 border-l-2 border-l-emerald-400">
+            <h3 class="font-display text-base font-bold text-slate-100 flex items-center gap-2">
+              <i data-lucide="database" class="w-4 h-4 text-emerald-400"></i> Integridad Referencial en Cascada
+            </h3>
+            <p class="text-xs text-slate-400 leading-relaxed">
+              La tabla asociativa <code>detalle_pedido</code> implementa la restricción <code>ON DELETE CASCADE</code> ligada al pedido global para suprimir registros huérfanos, mientras que <code>ON DELETE RESTRICT</code> sobre <code>id_producto</code> bloquea la eliminación física de cualquier compuesto con transacciones activas o pendientes.
+            </p>
+          </div>
+
+          <div class="card-glass rounded-2xl p-6 space-y-2 border-l-2 border-l-cyan-400">
+            <h3 class="font-display text-base font-bold text-slate-100 flex items-center gap-2">
+              <i data-lucide="shield-check" class="w-4 h-4 text-cyan-400"></i> Defensas contra Inyecciones SQL & Bypass
+            </h3>
+            <p class="text-xs text-slate-400 leading-relaxed">
+              Verificado mediante tests de penetración con cargas condicionales maliciosas (ej. <code>' OR '1'='1</code>). Las consultas parametrizadas mediante la interfaz <b>PDO</b> tratan las entradas como literales planos, mientras que los middlewares de cabecera bloquean por redirección forzada cualquier acceso no autenticado por URL a paneles de gestión.
+            </p>
+          </div>
+
+          <div class="card-glass rounded-2xl p-6 space-y-2 border-l-2 border-l-blue-400">
+            <h3 class="font-display text-base font-bold text-slate-100 flex items-center gap-2">
+              <i data-lucide="key" class="w-4 h-4 text-blue-400"></i> Hashing Asimétrico Bcrypt
+            </h3>
+            <p class="text-xs text-slate-400 leading-relaxed">
+              Protección de credenciales mediante el estándar criptográfico <code>password_hash(PASSWORD_DEFAULT)</code>, almacenando hashes irreversibles de longitud fija (255 caracteres) en la base de datos y validando los inicios de sesión mediante <code>password_verify()</code>.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ARQUITECTURA DE SOFTWARE & ASISTENTE CONVERSACIONAL RAG -->
+  <section id="arquitectura" class="py-24 px-6 border-t border-slate-900">
+    <div class="max-w-6xl mx-auto space-y-16">
+      <div class="fade-up max-w-3xl">
+        <span class="text-xs font-mono text-cyan-400 uppercase tracking-wider">Ingeniería de Software & IA</span>
+        <h2 class="font-display text-3xl sm:text-4xl text-slate-100 font-bold mt-2">
+          Arquitectura del Sistema & Ciclo Asíncrono RAG (ChemBot)
+        </h2>
+        <p class="mt-4 text-slate-400 leading-relaxed">
+          Para evitar las alucinaciones típicas de los modelos de lenguaje en entornos químicos críticos, el backend de PHP intercepta la consulta y recupera en vivo el inventario relacional de MySQL antes de comunicarse con la API de Google Gemini vía cURL.
+        </p>
+      </div>
+
+      <!-- DIAGRAMA DE SECUENCIA VECTORIAL SVG -->
+      <div class="fade-up card-glass rounded-2xl p-6 border border-slate-800 shadow-2xl overflow-hidden">
+        <div class="flex items-center justify-between mb-4 border-b border-slate-800 pb-3">
+          <span class="text-xs font-mono text-slate-300 font-semibold uppercase">Flujo de Información del Microservicio RAG</span>
+          <span class="text-xs font-mono text-blue-400">Fetch API $\rightarrow$ PHP PDO $\rightarrow$ Google Gemini Flash</span>
+        </div>
+
+        <div class="w-full overflow-x-auto pb-2">
+          <svg viewBox="0 0 950 260" class="w-full min-w-[800px] h-auto select-none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <marker id="arrowBlue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 1 L 9 5 L 0 9 z" fill="#38bdf8" />
+              </marker>
+              <marker id="arrowGreen" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 1 L 9 5 L 0 9 z" fill="#34d399" />
+              </marker>
+            </defs>
+
+            <!-- LÍNEAS DE FLUJO -->
+            <path d="M 170 130 L 260 130" stroke="#38bdf8" stroke-width="2" class="flow-stream" marker-end="url(#arrowBlue)" fill="none" />
+            <path d="M 430 110 L 510 80" stroke="#34d399" stroke-width="2" class="flow-stream" marker-end="url(#arrowGreen)" fill="none" />
+            <path d="M 510 100 L 430 130" stroke="#34d399" stroke-width="2" class="flow-stream" marker-end="url(#arrowGreen)" fill="none" />
+            <path d="M 430 150 L 680 150" stroke="#38bdf8" stroke-width="2.5" class="flow-stream" marker-end="url(#arrowBlue)" fill="none" />
+            <path d="M 680 180 L 170 180" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="4 4" marker-end="url(#arrowBlue)" fill="none" />
+
+            <!-- NODOS -->
+            <!-- 1. Frontend -->
+            <g>
+              <rect x="20" y="100" width="150" height="95" rx="10" fill="#0f172a" stroke="#0284c7" stroke-width="1.5" />
+              <text x="95" y="130" fill="#f8fafc" font-size="12" font-family="Space Grotesk" font-weight="700" text-anchor="middle">Cliente (Frontend)</text>
+              <text x="95" y="150" fill="#94a3b8" font-size="10" font-family="Inter" text-anchor="middle">Fetch API Asíncrono</text>
+              <text x="95" y="170" fill="#38bdf8" font-size="9" font-family="JetBrains Mono" text-anchor="middle">marked.js (Markdown)</text>
+            </g>
+
+            <!-- 2. Backend Orchestrator -->
+            <g>
+              <rect x="260" y="95" width="170" height="105" rx="10" fill="#1e293b" stroke="#38bdf8" stroke-width="2" />
+              <text x="345" y="125" fill="#f8fafc" font-size="13" font-family="Space Grotesk" font-weight="700" text-anchor="middle">chat_handler.php</text>
+              <text x="345" y="145" fill="#cbd5e1" font-size="10" font-family="Inter" text-anchor="middle">Sesión + Ventana Contexto</text>
+              <text x="345" y="165" fill="#67e8f9" font-size="9" font-family="JetBrains Mono" text-anchor="middle">Inyección Prompt RAG</text>
+              <text x="345" y="180" fill="#94a3b8" font-size="9" font-family="JetBrains Mono" text-anchor="middle">cURL nativo</text>
+            </g>
+
+            <!-- 3. Base de Datos MySQL -->
+            <g>
+              <rect x="510" y="45" width="150" height="75" rx="10" fill="#064e3b" stroke="#34d399" stroke-width="1.5" />
+              <text x="585" y="75" fill="#f0fdf4" font-size="12" font-family="Space Grotesk" font-weight="700" text-anchor="middle">MySQL (InnoDB)</text>
+              <text x="585" y="93" fill="#a7f3d0" font-size="10" font-family="Inter" text-anchor="middle">Catálogo en vivo</text>
+              <text x="585" y="107" fill="#6ee7b7" font-size="9" font-family="JetBrains Mono" text-anchor="middle">Sentencias PDO (3FN)</text>
+            </g>
+
+            <!-- 4. Google Gemini API -->
+            <g>
+              <rect x="680" y="115" width="220" height="85" rx="10" fill="#083344" stroke="#06b6d4" stroke-width="1.5" />
+              <text x="790" y="145" fill="#ecfeff" font-size="12" font-family="Space Grotesk" font-weight="700" text-anchor="middle">Google Gemini API</text>
+              <text x="790" y="165" fill="#a5f3fc" font-size="10" font-family="Inter" text-anchor="middle">Modelo gemini-3-flash-preview</text>
+              <text x="790" y="182" fill="#67e8f9" font-size="9" font-family="JetBrains Mono" text-anchor="middle">Respuesta técnica sin alucinación</text>
+            </g>
+          </svg>
+        </div>
+
+        <p class="text-xs text-slate-500 text-center mt-2 font-mono">
+          El servidor local asla la clave API y enriquece el payload con el stock real antes de comunicarse con la nube.
+        </p>
+      </div>
+
+      <!-- CARACTERÍSTICAS DE INGENIERÍA DE SOFTWARE -->
+      <div class="grid md:grid-cols-3 gap-6 fade-up">
+        <div class="card-glass rounded-2xl p-6 space-y-3">
+          <h4 class="font-display text-base font-bold text-slate-100 flex items-center gap-2">
+            <i data-lucide="shield-alert" class="w-4 h-4 text-emerald-400"></i> Ciberseguridad & Sanitización
+          </h4>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            Todas las consultas utilizan sentencias preparadas nativas en PDO contra inyecciones SQL (verificadas con vectores de ataque como `' OR '1'='1`). Las contraseñas se almacenan mediante hashes criptográficos asimétricos con <code>password_hash(Bcrypt)</code>.
+          </p>
+        </div>
+
+        <div class="card-glass rounded-2xl p-6 space-y-3">
+          <h4 class="font-display text-base font-bold text-slate-100 flex items-center gap-2">
+            <i data-lucide="sliders" class="w-4 h-4 text-blue-400"></i> Ventana Deslizante de Contexto
+          </h4>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            Para mitigar el consumo de tokens y latencias de red, el controlador implementa un algoritmo de ventana deslizante con <code>array_slice($_SESSION['chat_history'], -10)</code>, preservando el hilo de la conversación sin sobrecargar el payload JSON.
+          </p>
+        </div>
+
+        <div class="card-glass rounded-2xl p-6 space-y-3">
+          <h4 class="font-display text-base font-bold text-slate-100 flex items-center gap-2">
+            <i data-lucide="printer" class="w-4 h-4 text-cyan-400"></i> Generación de Documentación ADR
+          </h4>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            Al confirmarse una transacción, el script <code>comprobante.php</code> genera una orden de recogida en formato de impresión que integra automáticamente la dirección de planta del emisor, clasificación de riesgo CLP y directivas del Acuerdo ADR para transportistas.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CASO DE ESTUDIO CUANTITATIVO: VALIDACIÓN MATEMÁTICA -->
+  <section class="py-24 px-6 border-t border-slate-900 bg-slate-900/30">
+    <div class="max-w-6xl mx-auto space-y-16">
+      <div class="fade-up max-w-3xl">
+        <span class="text-xs font-mono text-emerald-400 uppercase tracking-wider">Capítulo 7 · Validación Numérica</span>
+        <h2 class="font-display text-3xl sm:text-4xl text-slate-100 font-bold mt-2">
+          Impacto Transaccional Real: Corriente de Diclorometano
+        </h2>
+        <p class="mt-4 text-slate-400 leading-relaxed">
+          Simulación cuantitativa de una transacción anual de 100 t/año de diclorometano residual (85% pureza) intercambiado entre una planta de síntesis farmacéutica (Emisor) y una fábrica de pinturas y barnices (Receptor), evaluado con tarifas oficiales de COGERSA y datos de mercado de IMARC.
+        </p>
+      </div>
+
+      <div class="grid lg:grid-cols-3 gap-6 fade-up">
+        
+        <!-- Tarjeta Emisor -->
+        <div class="card-glass rounded-2xl p-7 space-y-4 border-t-2 border-t-emerald-400">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-mono text-emerald-400">Planta Emisora (Síntesis)</span>
+            <i data-lucide="trending-up" class="w-5 h-5 text-emerald-400"></i>
+          </div>
+          <p class="text-xs text-slate-500 uppercase font-mono">Retorno Neto Anual</p>
+          <p class="font-display text-3xl sm:text-4xl text-emerald-400 font-bold num-tabular">+85.891 <span class="text-base text-slate-300 font-normal">€/año</span></p>
+          <div class="space-y-1.5 text-xs font-mono text-slate-400 pt-2 border-t border-slate-800">
+            <div class="flex justify-between"><span>Ahorro vertido COGERSA:</span><span class="text-slate-200">65.891 €</span></div>
+            <div class="flex justify-between"><span>Ingreso venta subproducto:</span><span class="text-slate-200">20.000 €</span></div>
+            <div class="flex justify-between font-bold text-slate-100 pt-1"><span>Beneficio total generado:</span><span class="text-emerald-400">85.891 €</span></div>
+          </div>
+        </div>
+
+        <!-- Tarjeta Receptor -->
+        <div class="card-glass rounded-2xl p-7 space-y-4 border-t-2 border-t-blue-400">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-mono text-blue-400">Planta Receptora (Pinturas)</span>
+            <i data-lucide="coins" class="w-5 h-5 text-blue-400"></i>
+          </div>
+          <p class="text-xs text-slate-500 uppercase font-mono">Ahorro en Aprovisionamiento</p>
+          <p class="font-display text-3xl sm:text-4xl text-blue-400 font-bold num-tabular">-80.000 <span class="text-base text-slate-300 font-normal">€/año</span></p>
+          <div class="space-y-1.5 text-xs font-mono text-slate-400 pt-2 border-t border-slate-800">
+            <div class="flex justify-between"><span>Coste solvente virgen:</span><span class="text-slate-200">100.000 €</span></div>
+            <div class="flex justify-between"><span>Coste en ChemExchange:</span><span class="text-slate-200">20.000 €</span></div>
+            <div class="flex justify-between font-bold text-slate-100 pt-1"><span>Reducción de coste (80%):</span><span class="text-blue-400">80.000 €</span></div>
+          </div>
+        </div>
+
+        <!-- Tarjeta Ambiental -->
+        <div class="card-glass rounded-2xl p-7 space-y-4 border-t-2 border-t-cyan-400">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-mono text-cyan-400">Huella de Carbono Evitada</span>
+            <i data-lucide="leaf" class="w-5 h-5 text-cyan-400"></i>
+          </div>
+          <p class="text-xs text-slate-500 uppercase font-mono">Emisiones Evitadas Netas</p>
+          <p class="font-display text-3xl sm:text-4xl text-cyan-400 font-bold num-tabular">573 <span class="text-base text-slate-300 font-normal">t CO₂eq</span></p>
+          <div class="space-y-1.5 text-xs font-mono text-slate-400 pt-2 border-t border-slate-800">
+            <div class="flex justify-between"><span>Flujo desviado de vertedero:</span><span class="text-slate-200">100 t/año</span></div>
+            <div class="flex justify-between"><span>Factor emisión petroquímica:</span><span class="text-slate-200">5,73 t CO₂/t</span></div>
+            <div class="flex justify-between font-bold text-slate-100 pt-1"><span>Mitigación directa ODS 13:</span><span class="text-cyan-400">573 t/año</span></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- MODAL 1: CATÁLOGO EN ALTA RESOLUCIÓN -->
+  <div id="catalogModal" class="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-md hidden items-center justify-center p-3 sm:p-6 transition-opacity duration-300">
+    <div class="relative max-w-7xl w-full max-h-[94vh] flex flex-col items-center">
+      <div class="w-full flex justify-between items-center mb-2.5 text-xs font-mono text-slate-400 px-1">
+        <span class="flex items-center gap-2 text-blue-400 font-semibold">
+          <i data-lucide="layout-grid" class="w-4 h-4"></i> Vista Principal del Catálogo Dinámico (ChemExchange)
+        </span>
+        <button onclick="closeModal('catalogModal')" class="text-slate-400 hover:text-white flex items-center gap-1 transition-colors cursor-pointer">
+          <span>Cerrar (Esc)</span>
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+      <div class="w-full rounded-2xl overflow-hidden border border-slate-800 bg-white p-2 shadow-2xl max-h-[85vh] overflow-auto">
+        <img src="../assets/img/tfg-chemexchange-catalog.png" alt="Catálogo ChemExchange Alta Resolución" class="w-full h-auto min-w-[1000px] object-contain rounded-lg">
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 2: FICHA DETALLE EN ALTA RESOLUCIÓN -->
+  <div id="detailModal" class="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-md hidden items-center justify-center p-3 sm:p-6 transition-opacity duration-300">
+    <div class="relative max-w-5xl w-full max-h-[94vh] flex flex-col items-center">
+      <div class="w-full flex justify-between items-center mb-2.5 text-xs font-mono text-slate-400 px-1">
+        <span class="flex items-center gap-2 text-emerald-400 font-semibold">
+          <i data-lucide="file-text" class="w-4 h-4"></i> Ficha Técnica Analítica con Parámetros Químicos y CLP
+        </span>
+        <button onclick="closeModal('detailModal')" class="text-slate-400 hover:text-white flex items-center gap-1 transition-colors cursor-pointer">
+          <span>Cerrar (Esc)</span>
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+      <div class="w-full rounded-2xl overflow-hidden border border-slate-800 bg-white p-2 shadow-2xl max-h-[85vh] overflow-auto">
+        <img src="../assets/img/tfg-chemexchange-detail.png" alt="Ficha Técnica ChemExchange Alta Resolución" class="w-full h-auto min-w-[750px] object-contain rounded-lg">
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER NAVEGACIÓN -->
+  <footer class="py-16 px-6 border-t border-slate-900 bg-slate-950">
+    <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-6">
+      <div>
+        <p class="text-xs font-mono text-slate-500 uppercase tracking-wider">Siguiente Caso de Estudio</p>
+        <a href="moldes.html" class="font-display text-2xl text-slate-100 font-bold hover:text-blue-400 transition-colors inline-flex items-center gap-2 mt-1">
+          Modelado 3D & Inyección CAD <i data-lucide="arrow-right" class="w-5 h-5"></i>
+        </a>
+      </div>
+      
+      <div class="flex items-center gap-4">
+        <a href="../assets/docs/TFG_ChemExchange.pdf" download class="inline-flex items-center gap-2 border border-slate-800 hover:border-slate-600 text-slate-300 px-4 py-2 rounded-lg text-xs font-mono transition-colors">
+          <i data-lucide="download" class="w-3.5 h-3.5"></i> Descargar TFG Completo
+        </a>
+        <a href="../index.html" class="inline-flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-slate-200 px-4 py-2 rounded-lg text-xs font-mono transition-colors">
+          Inicio
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- SCRIPTS -->
+  <script>
+    lucide.createIcons();
+
+    // Scroll Navbar Effect
+    const navInner = document.getElementById('navInner');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 20) {
+        navInner.classList.add('shadow-lg', 'shadow-black/40', 'border-slate-700/80');
+      } else {
+        navInner.classList.remove('shadow-lg', 'shadow-black/40', 'border-slate-700/80');
+      }
+    });
+
+    // Observer idéntico al index.html
+    const revealEls = document.querySelectorAll('.fade-up');
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('in');
+        } else {
+          e.target.classList.remove('in');
+        }
+      });
+    }, { 
+      threshold: 0.12, 
+      rootMargin: "0px 0px -50px 0px" 
+    });
+    revealEls.forEach(el => io.observe(el));
+
+    // Control dinámico de las 4 pestañas de ChemExchange
+    let activeTfgView = 'catalog';
+
+    function switchTfgView(view) {
+      activeTfgView = view;
+      const views = ['catalog', 'detail', 'publicar', 'chembot'];
+      
+      views.forEach(v => {
+        const viewEl = document.getElementById('view' + v.charAt(0).toUpperCase() + v.slice(1));
+        const btnEl = document.getElementById('tabBtn' + v.charAt(0).toUpperCase() + v.slice(1));
+        
+        if (v === view) {
+          viewEl.classList.remove('hidden');
+          btnEl.className = 'px-3 py-1.5 rounded-lg text-xs font-mono font-medium transition-colors bg-blue-500 text-slate-950 cursor-pointer';
+        } else {
+          viewEl.classList.add('hidden');
+          btnEl.className = 'px-3 py-1.5 rounded-lg text-xs font-mono font-medium transition-colors text-slate-400 hover:text-slate-200 cursor-pointer';
+        }
+      });
+    }
+
+    function openCurrentTfgModal() {
+      openModal(activeTfgView + 'Modal');
+    }
+    // Funciones modales
+    function openModal(id) {
+      const modal = document.getElementById(id);
+      if (!modal) return;
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      document.body.style.overflow = 'hidden';
+      lucide.createIcons();
+    }
+
+    function closeModal(id) {
+      const modal = document.getElementById(id);
+      if (!modal) return;
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+      document.body.style.overflow = '';
+    }
+
+    ['catalogModal', 'detailModal'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.addEventListener('click', function(e) {
+          if (e.target === this) closeModal(id);
+        });
+      }
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeModal('catalogModal');
+        closeModal('detailModal');
+        closeModal('erModal');
+        closeModal('publicarModal')
+        closeModal('chembotModal')
+      }
+    });
+  </script>
+
+  <!-- MODAL / LIGHTBOX PARA EL DIAGRAMA E-R EN ALTA DEFINICIÓN -->
+  <div id="erModal" class="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-md hidden items-center justify-center p-3 sm:p-6 transition-opacity duration-300">
+    <div class="relative max-w-5xl w-full max-h-[94vh] flex flex-col items-center">
+      <div class="w-full flex justify-between items-center mb-2.5 text-xs font-mono text-slate-400 px-1">
+        <span class="flex items-center gap-2 text-emerald-400 font-semibold">
+          <i data-lucide="database" class="w-4 h-4"></i> Modelo Entidad-Relación Completo (ChemExchange MySQL)
+        </span>
+        <button onclick="closeModal('erModal')" class="text-slate-400 hover:text-white flex items-center gap-1 transition-colors cursor-pointer">
+          <span>Cerrar (Esc)</span>
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+      <div class="w-full rounded-2xl overflow-hidden border border-slate-800 bg-white p-4 shadow-2xl max-h-[85vh] overflow-auto">
+        <img src="../assets/img/tfg-diagrama-er.png" alt="Diagrama E-R Alta Resolución" class="w-full h-auto min-w-[750px] object-contain rounded-lg">
+      </div>
+      <div class="w-full p-2.5 bg-slate-950/90 mt-2 rounded-xl border border-slate-800 text-[11px] font-mono flex flex-wrap justify-between items-center gap-2 text-slate-400">
+        <span>Claves foráneas: fk_vendedor (Clientes-Productos) con ON DELETE SET NULL</span>
+        <span class="text-emerald-400">Atributos técnicos parametrizados: pH, pureza, CLP, estado físico y precio unitario</span>
+      </div>
+    </div>
+  </div>
+  <!-- MODAL 3: PUBLICAR OFERTA EN ALTA RESOLUCIÓN -->
+  <div id="publicarModal" class="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-md hidden items-center justify-center p-3 sm:p-6 transition-opacity duration-300">
+    <div class="relative max-w-5xl w-full max-h-[94vh] flex flex-col items-center">
+      <div class="w-full flex justify-between items-center mb-2.5 text-xs font-mono text-slate-400 px-1">
+        <span class="flex items-center gap-2 text-blue-400 font-semibold">
+          <i data-lucide="plus-circle" class="w-4 h-4"></i> Formulario de Parametrización Analítica (publicar.php)
+        </span>
+        <button onclick="closeModal('publicarModal')" class="text-slate-400 hover:text-white flex items-center gap-1 transition-colors cursor-pointer">
+          <span>Cerrar (Esc)</span>
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+      <div class="w-full rounded-2xl overflow-hidden border border-slate-800 bg-white p-2 shadow-2xl max-h-[85vh] overflow-auto">
+        <img src="../assets/img/tfg-chemexchange-publicar.png" alt="Formulario Publicar Alta Resolución" class="w-full h-auto min-w-[700px] object-contain rounded-lg">
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 4: CHEMBOT RAG EN ALTA RESOLUCIÓN -->
+  <div id="chembotModal" class="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-md hidden items-center justify-center p-3 sm:p-6 transition-opacity duration-300">
+    <div class="relative max-w-4xl w-full max-h-[94vh] flex flex-col items-center">
+      <div class="w-full flex justify-between items-center mb-2.5 text-xs font-mono text-slate-400 px-1">
+        <span class="flex items-center gap-2 text-emerald-400 font-semibold">
+          <i data-lucide="bot" class="w-4 h-4"></i> Asistente Conversacional RAG Acoplado a MySQL (ChemBot)
+        </span>
+        <button onclick="closeModal('chembotModal')" class="text-slate-400 hover:text-white flex items-center gap-1 transition-colors cursor-pointer">
+          <span>Cerrar (Esc)</span>
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+      <div class="w-full rounded-2xl overflow-hidden border border-slate-800 bg-white p-2 shadow-2xl max-h-[85vh] overflow-auto">
+        <img src="../assets/img/tfg-chemexchange-chembot.png" alt="ChemBot RAG Alta Resolución" class="w-full h-auto min-w-[600px] object-contain rounded-lg">
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -57,13 +57,19 @@
       border: 1px solid rgba(148,163,184,0.12);
     }
 
-    .fade-up {
-      opacity: 0;
-      transform: translateY(20px);
-      transition: opacity .7s cubic-bezier(0.16, 1, 0.3, 1), transform .7s cubic-bezier(0.16, 1, 0.3, 1);
+    .fade-up { 
+      opacity: 0; 
+      transform: translateY(16px); 
+      transition: opacity .7s ease, transform .7s ease; 
     }
-    .fade-up.in { opacity: 1; transform: translateY(0); }
+    .fade-up.in { 
+      opacity: 1; 
+      transform: translateY(0); 
+    }
 
+    @media (prefers-reduced-motion: reduce) {
+      .fade-up { transition: none; opacity: 1; transform: none; }
+    }
     .tech-tag {
       font-family: 'JetBrains Mono', monospace;
       font-size: 0.72rem;
@@ -748,16 +754,21 @@
       }
     });
 
-    // Fade-up Observer
+    // Scroll reveal con repetición en ambas direcciones
     const revealEls = document.querySelectorAll('.fade-up');
     const io = new IntersectionObserver((entries) => {
       entries.forEach(e => {
         if (e.isIntersecting) {
           e.target.classList.add('in');
-          io.unobserve(e.target);
+        } else {
+          e.target.classList.remove('in');
         }
       });
-    }, { threshold: 0.1 });
+    }, { 
+      threshold: 0.12, 
+      rootMargin: "0px 0px -50px 0px" 
+    });
+
     revealEls.forEach(el => io.observe(el));
 
     // LIGHTBOX SCRIPT

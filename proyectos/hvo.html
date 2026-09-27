@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Planta de Biodiésel HVO — Simulación en Aspen Plus | Tomás</title>
+  <meta name="description" content="Diseño riguroso de proceso e ingeniería de simulación en Aspen Plus para la producción de HVO a partir de UCO e hidrógeno verde. Modelado UNIFAC, HDO, isocraqueo y fraccionamiento.">
+  
+  <!-- Tailwind CSS & Lucide Icons -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Chart.js vía CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+  <!-- Fuentes Google: Space Grotesk, Inter, JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ['Space Grotesk', 'sans-serif'],
+            body: ['Inter', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            cyan: { 400: '#22d3ee', 500: '#06b6d4', 950: '#083344' },
+            emerald: { 400: '#34d399', 500: '#10b981', 950: '#064e3b' },
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    html { scroll-padding-top: 90px; }
+    body { background-color: #020617; }
+    ::selection { background-color: #34d399; color: #020617; }
+
+    .grain {
+      background-image: radial-gradient(circle at 1px 1px, rgba(148,163,184,0.07) 1px, transparent 0);
+      background-size: 24px 24px;
+    }
+
+    .glass {
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+
+    .card-glass {
+      background: linear-gradient(180deg, rgba(30,41,59,0.55), rgba(15,23,42,0.65));
+      border: 1px solid rgba(148,163,184,0.12);
+    }
+
+    /* Animación idéntica al index.html */
+    .fade-up { 
+      opacity: 0; 
+      transform: translateY(16px); 
+      transition: opacity .7s ease, transform .7s ease; 
+    }
+    .fade-up.in { 
+      opacity: 1; 
+      transform: translateY(0); 
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .fade-up { transition: none; opacity: 1; transform: none; }
+    }
+
+    .tech-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      color: #94a3b8;
+      background: rgba(148,163,184,0.08);
+      border: 1px solid rgba(148,163,184,0.15);
+      padding: 0.25rem 0.65rem;
+      border-radius: 0.4rem;
+    }
+
+    .num-tabular { font-variant-numeric: tabular-nums; }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-300 font-body antialiased grain">
+
+  <!-- NAVBAR FLOTANTE -->
+  <header id="navbar" class="fixed top-0 inset-x-0 z-40 transition-all duration-300">
+    <div class="max-w-6xl mx-auto px-6">
+      <div id="navInner" class="mt-4 rounded-2xl glass border border-slate-800/70 px-5 py-3 flex items-center justify-between transition-all duration-300">
+        <a href="../index.html" class="inline-flex items-center gap-2 text-sm font-medium text-slate-300 hover:text-emerald-400 transition-colors group">
+          <i data-lucide="arrow-left" class="w-4 h-4 group-hover:-translate-x-1 transition-transform"></i>
+          Volver al portfolio
+        </a>
+        <div class="flex items-center gap-3">
+          <span class="text-xs font-mono text-slate-500 hidden sm:inline-block">Simulación de Procesos</span>
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+          <span class="text-xs font-mono text-emerald-400">HVO Bio-Refinery</span>
+        </div>
+        <a href="../assets/docs/Memoria_HVO_ETSII.pdf" download class="inline-flex items-center gap-2 bg-emerald-400 hover:bg-emerald-300 text-slate-950 text-xs font-semibold px-3.5 py-1.5 rounded-lg transition-colors">
+          <i data-lucide="download" class="w-3.5 h-3.5"></i>
+          Descargar Memoria (PDF)
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO SECTION -->
+  <section class="relative pt-36 pb-20 px-6 overflow-hidden">
+    <div class="absolute -top-24 right-[-10%] w-[500px] h-[500px] rounded-full bg-emerald-500/10 blur-[120px] pointer-events-none"></div>
+    <div class="absolute top-1/2 left-[-15%] w-[420px] h-[420px] rounded-full bg-cyan-500/10 blur-[120px] pointer-events-none"></div>
+
+    <div class="max-w-6xl mx-auto space-y-12">
+      <div class="fade-up space-y-6 max-w-4xl">
+        <div class="flex flex-wrap items-center gap-3">
+          <span class="inline-flex items-center gap-1.5 text-xs font-mono text-emerald-400 border border-emerald-400/30 bg-emerald-400/5 rounded-full px-3 py-1">
+            <i data-lucide="cpu" class="w-3.5 h-3.5"></i> Aspen Plus V14
+          </span>
+          <span class="text-xs font-mono text-slate-500 border border-slate-800 rounded-full px-3 py-1">
+            Modelo UNIFAC
+          </span>
+          <span class="text-xs font-mono text-slate-500 border border-slate-800 rounded-full px-3 py-1">
+            ETSII UPM
+          </span>
+        </div>
+
+        <h1 class="font-display text-4xl sm:text-6xl text-slate-100 font-bold tracking-tight leading-[1.1]">
+          Diseño y Simulación de Planta de Biodiésel HVO
+        </h1>
+
+        <p class="text-lg sm:text-xl text-slate-400 leading-relaxed max-w-3xl">
+          Modelización rigurosa del hidrotratamiento catalítico de aceite de cocina usado (UCO) e hidrógeno verde. Integración de reactores de hidrodesoxigenación (HDO) e isocraqueo, recuperación de H₂ mediante PSA y tren de fraccionamiento a vacío.
+        </p>
+
+        <div class="pt-2 flex flex-wrap items-center gap-4">
+          <a href="../assets/docs/Memoria_HVO_ETSII.pdf" download class="inline-flex items-center gap-2.5 bg-emerald-400 hover:bg-emerald-300 text-slate-950 font-medium px-6 py-3 rounded-xl transition-all shadow-lg shadow-emerald-500/20">
+            <i data-lucide="file-text" class="w-4 h-4"></i>
+            Descargar Memoria Técnica (PDF)
+          </a>
+          <a href="#flowsheet" class="inline-flex items-center gap-2 border border-slate-700 hover:border-slate-500 text-slate-300 hover:text-white px-5 py-3 rounded-xl transition-colors">
+            Explorar Flowsheet Aspen <i data-lucide="arrow-down" class="w-4 h-4"></i>
+          </a>
+        </div>
+      </div>
+
+      <!-- VISOR PRINCIPAL: PFD DE INGENIERÍA & SIMULACIÓN ASPEN PLUS -->
+      <div id="flowsheet" class="fade-up card-glass rounded-2xl p-5 sm:p-7 border border-slate-800 shadow-2xl relative overflow-hidden">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4 border-b border-slate-800 pb-3">
+          
+          <!-- Pestañas interactivas para alternar entre PFD y Flowsheet de Aspen -->
+          <div class="flex items-center gap-2 bg-slate-900/80 p-1 rounded-xl border border-slate-800/80">
+            <button id="tabBtnPfd" onclick="switchView('pfd')" class="px-3.5 py-1.5 rounded-lg text-xs font-mono font-medium transition-colors bg-emerald-400 text-slate-950 cursor-pointer">
+              <i data-lucide="file-spreadsheet" class="w-3.5 h-3.5 inline mr-1"></i> PFD de Ingeniería
+            </button>
+            <button id="tabBtnAspen" onclick="switchView('aspen')" class="px-3.5 py-1.5 rounded-lg text-xs font-mono font-medium transition-colors text-slate-400 hover:text-slate-200 cursor-pointer">
+              <i data-lucide="cpu" class="w-3.5 h-3.5 inline mr-1"></i> Aspen Plus V14
+            </button>
+          </div>
+
+          <button onclick="openCurrentModal()" class="inline-flex items-center gap-1.5 text-xs font-mono text-emerald-400 hover:text-emerald-300 cursor-pointer">
+            <i data-lucide="maximize-2" class="w-3.5 h-3.5"></i> Ampliar plano completo (HD)
+          </button>
+        </div>
+
+        <!-- VISTA 1: PFD DE INGENIERÍA QUÍMICA REVISADO -->
+        <div id="viewPfd" onclick="openModal('pfdModal')" class="rounded-xl overflow-hidden border border-slate-800 bg-white p-2 cursor-zoom-in group relative">
+          <img src="../assets/img/hvo-pfd-completo.png" alt="PFD de Ingeniería de Producción de HVO" class="w-full h-auto object-contain max-h-[460px] group-hover:scale-[1.01] transition-transform duration-300">
+          <div class="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 text-white font-mono text-xs">
+            <i data-lucide="zoom-in" class="w-5 h-5 text-emerald-400"></i> Clic para inspeccionar corrientes, presiones y balances
+          </div>
+        </div>
+
+        <!-- VISTA 2: FLOWSHEET DE SIMULACIÓN ASPEN PLUS -->
+        <div id="viewAspen" onclick="openModal('flowsheetModal')" class="hidden rounded-xl overflow-hidden border border-slate-800 bg-slate-950/80 cursor-zoom-in group relative">
+          <img src="../assets/img/hvo-aspen-flowsheet.png" alt="Flowsheet Aspen Plus HVO" class="w-full h-auto object-contain max-h-[460px] group-hover:scale-[1.01] transition-transform duration-300">
+          <div class="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 text-white font-mono text-xs">
+            <i data-lucide="zoom-in" class="w-5 h-5 text-emerald-400"></i> Clic para ver simulación y convergencia RadFrac
+          </div>
+        </div>
+
+        <p class="text-xs text-slate-500 text-center mt-3 font-mono">
+          Nomenclatura normalizada: bombas P-101/P-102, reactores catalíticos R-101/R-102, flashes D-102/D-104 y tren de vacío C-203/C-204 con eyectores de vapor J-201/J-202.
+        </p>
+      </div>
+
+      <!-- KPI METRICS GRID -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 fade-up">
+        <div class="card-glass rounded-2xl p-6">
+          <p class="text-xs font-mono text-slate-500 uppercase tracking-wider mb-2">Capacidad Diésel HVO</p>
+          <p class="font-display text-3xl sm:text-4xl text-slate-100 font-bold num-tabular">395,99 <span class="text-base text-emerald-400 font-normal">Tm/d</span></p>
+          <p class="text-xs text-slate-400 mt-2">Sobre 500 Tm/d de UCO alimentadas</p>
+        </div>
+
+        <div class="card-glass rounded-2xl p-6">
+          <p class="text-xs font-mono text-slate-500 uppercase tracking-wider mb-2">Pureza en Producto</p>
+          <p class="font-display text-3xl sm:text-4xl text-emerald-400 font-bold num-tabular">99,5 <span class="text-base text-slate-200 font-normal">% p/p</span></p>
+          <p class="text-xs text-slate-400 mt-2">Fracción de parafinas e isoparafinas C17-C18</p>
+        </div>
+
+        <div class="card-glass rounded-2xl p-6">
+          <p class="text-xs font-mono text-slate-500 uppercase tracking-wider mb-2">Rendimiento Global</p>
+          <p class="font-display text-3xl sm:text-4xl text-slate-100 font-bold num-tabular">84,23 <span class="text-base text-cyan-400 font-normal">%</span></p>
+          <p class="text-xs text-slate-400 mt-2">76,86% HVO + nafta, queroseno y GLP</p>
+        </div>
+
+        <div class="card-glass rounded-2xl p-6">
+          <p class="text-xs font-mono text-slate-500 uppercase tracking-wider mb-2">Exceso de Hidrógeno</p>
+          <p class="font-display text-3xl sm:text-4xl text-slate-100 font-bold num-tabular">+31 <span class="text-base text-cyan-400 font-normal">%</span></p>
+          <p class="text-xs text-slate-400 mt-2">Garantiza conversión completa (>97%) en R-101</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MODELIZACIÓN TERMODINÁMICA Y DEFINICIÓN DE COMPONENTES -->
+  <section class="py-24 px-6 border-t border-slate-900 bg-slate-900/30">
+    <div class="max-w-6xl mx-auto space-y-16">
+      <div class="fade-up max-w-3xl">
+        <span class="text-xs font-mono text-emerald-400 uppercase tracking-wider">Metodología de Simulación</span>
+        <h2 class="font-display text-3xl sm:text-4xl text-slate-100 font-bold mt-2">
+          Termodinámica UNIFAC y Caracterización de 28 Componentes
+        </h2>
+        <p class="mt-4 text-slate-400 leading-relaxed">
+          En lugar de recurrir a pseudo-componentes simplistas de una sola cadena, se modelizó la heterogeneidad real del aceite de cocina usado mediante sus triglicéridos mayoritarios y se representó el isocraqueo mediante familias completas de isómeros ramificados.
+        </p>
+      </div>
+
+      <div class="grid lg:grid-cols-12 gap-8 items-center fade-up">
+        
+        <!-- VISOR DE LA TABLA DE COMPONENTES DE ASPEN -->
+        <div class="lg:col-span-6 card-glass rounded-2xl p-4 border border-slate-800 space-y-3">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-2 text-xs font-mono">
+            <span class="text-slate-200 font-semibold">Base de Datos de Componentes (Aspen Plus)</span>
+            <button onclick="openModal('compModal')" class="text-emerald-400 hover:text-emerald-300 flex items-center gap-1 cursor-pointer">
+              <i data-lucide="zoom-in" class="w-3.5 h-3.5"></i> Ampliar tabla
+            </button>
+          </div>
+          
+          <div onclick="openModal('compModal')" class="rounded-xl overflow-hidden border border-slate-800 bg-white/95 p-2 cursor-zoom-in group relative">
+            <img src="../assets/img/hvo-aspen-components.png" alt="Especificación de componentes en Aspen Plus" class="w-full h-auto object-contain max-h-[380px] rounded group-hover:scale-[1.01] transition-transform">
+          </div>
+          
+          <p class="text-[11px] text-slate-500 text-center font-mono">
+            Parametrización estricta de fórmulas empíricas (C57H104O6, C18H38, C17H36) y números CAS para cálculo de propiedades de transporte.
+          </p>
+        </div>
+
+        <!-- EXPLICACIÓN TÉCNICA DE LAS DECISIONES DE DISEÑO -->
+        <div class="lg:col-span-6 space-y-4">
+          <div class="card-glass rounded-2xl p-6 space-y-2 border-l-2 border-l-emerald-400">
+            <h3 class="font-display text-base font-bold text-slate-100 flex items-center gap-2">
+              <i data-lucide="flask-conical" class="w-4 h-4 text-emerald-400"></i> ¿Por qué el modelo UNIFAC?
+            </h3>
+            <p class="text-xs text-slate-400 leading-relaxed">
+              Dada la ausencia de parámetros binarios experimentales para triglicéridos de alto peso molecular e hidrocarburos de cadena larga ($C_{17}-C_{18}$), se seleccionó el método de contribución de grupos <b>UNIFAC</b>. Esto permite predecir con gran exactitud los coeficientes de actividad en fase líquida y el equilibrio de fases.
+            </p>
+          </div>
+
+          <div class="card-glass rounded-2xl p-6 space-y-2 border-l-2 border-l-cyan-400">
+            <h3 class="font-display text-base font-bold text-slate-100 flex items-center gap-2">
+              <i data-lucide="git-branch" class="w-4 h-4 text-cyan-400"></i> Modelado de la Fracción Isomérica
+            </h3>
+            <p class="text-xs text-slate-400 leading-relaxed">
+              La isomerización genera cientos de posibles isómeros ramificados. Para mantener la resolución numérica sin comprometer la convergencia de RadFrac, se seleccionaron los isómeros predominantes: <b>15-, 14- y 4-metilhexadecano</b> junto a <b>16-, 3- y 4-metilheptadecano</b>, asegurando la propiedad de fluidez en frío exigida por la norma <b>EN 15940</b>.
+            </p>
+          </div>
+
+          <div class="card-glass rounded-2xl p-6 space-y-2 border-l-2 border-l-teal-400">
+            <h3 class="font-display text-base font-bold text-slate-100 flex items-center gap-2">
+              <i data-lucide="shield-check" class="w-4 h-4 text-teal-400"></i> Simplificación de la Alimentación de UCO
+            </h3>
+            <p class="text-xs text-slate-400 leading-relaxed">
+              Se tomaron los ácidos grasos y triglicéridos mayoritarios del aceite de cocina usado (trioleína 35,5%, trilinoleína 33,5%, trilinolenina 11,7%, ácido oleico 9,9% y linoleico 9,4%), despreciando metales traza para garantizar la convergencia del balance de masa.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ARQUITECTURA DE PROCESO EN 4 BLOQUES -->
+  <section class="py-24 px-6 border-t border-slate-900">
+    <div class="max-w-6xl mx-auto space-y-16">
+      <div class="fade-up max-w-3xl">
+        <span class="text-xs font-mono text-cyan-400 uppercase tracking-wider">Ingeniería de Reactores y Separación</span>
+        <h2 class="font-display text-3xl sm:text-4xl text-slate-100 font-bold mt-2">
+          Etapas del Proceso: De UCO a Hidrocarburo Parafínico
+        </h2>
+        <p class="mt-4 text-slate-400 leading-relaxed">
+          Diseño secuencial siguiendo el <i>Modelo de Cebolla de Smith-Linnhoff</i> y las <i>Heurísticas de Douglas</i>, priorizando la recuperación de reactivos caros y la integración energética.
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-5 fade-up">
+        
+        <!-- Bloque 1 -->
+        <div class="card-glass rounded-2xl p-6 space-y-4 border-t-2 border-t-cyan-400 flex flex-col justify-between">
+          <div class="space-y-3">
+            <span class="text-xs font-mono text-slate-500">Etapa 01</span>
+            <h3 class="font-display text-lg font-bold text-slate-100">Pretratamiento & Deshidratación</h3>
+            <p class="text-xs text-slate-400 leading-relaxed">
+              Bombeo inicial a 35 bar (bomba centrífuga P-101, $\eta=0,75$) y evaporación rápida en horno D-101 a 310 °C para reducir el contenido de agua por debajo de 500 ppm, protegiendo los catalizadores de desoxigenación.
+            </p>
+          </div>
+          <div class="pt-3 border-t border-slate-800 text-[11px] font-mono text-slate-400 space-y-1">
+            <p>· Presión: 35 bar</p>
+            <p>· Temperatura: 310 °C</p>
+            <p>· Purga H₂O: 0,12 Tm/d</p>
+          </div>
+        </div>
+
+        <!-- Bloque 2 -->
+        <div class="card-glass rounded-2xl p-6 space-y-4 border-t-2 border-t-emerald-400 flex flex-col justify-between">
+          <div class="space-y-3">
+            <span class="text-xs font-mono text-slate-500">Etapa 02</span>
+            <h3 class="font-display text-lg font-bold text-slate-100">Hidrodesoxigenación (HDO)</h3>
+            <p class="text-xs text-slate-400 leading-relaxed">
+              Reactor catalítico R-101 con lecho fijo $NiMo/\gamma-Al_{2}O_{3}$. Ruptura de enlaces C-O y saturación de dobles enlaces para producir n-parafinas ($C_{17}-C_{18}$) y propano como subproducto. Flash D-102 a 75 °C y reciclo en PSA-1.
+            </p>
+          </div>
+          <div class="pt-3 border-t border-slate-800 text-[11px] font-mono text-slate-400 space-y-1">
+            <p>· Condiciones: 320 °C · 35 bar</p>
+            <p>· Exceso estequiométrico H₂: 31%</p>
+            <p>· Conversión: > 97%</p>
+          </div>
+        </div>
+
+        <!-- Bloque 3 -->
+        <div class="card-glass rounded-2xl p-6 space-y-4 border-t-2 border-t-teal-400 flex flex-col justify-between">
+          <div class="space-y-3">
+            <span class="text-xs font-mono text-slate-500">Etapa 03</span>
+            <h3 class="font-display text-lg font-bold text-slate-100">Isocraqueo Catalítico</h3>
+            <p class="text-xs text-slate-400 leading-relaxed">
+              Reactor R-102 con catalizador bifuncional Ni-Mo sobre zeolita ZSM-5. Ramificación de n-parafinas a isoparafinas para abatir el punto de congelación y optimizar la combustión. Enfriamiento a 40 °C y decantador D-106.
+            </p>
+          </div>
+          <div class="pt-3 border-t border-slate-800 text-[11px] font-mono text-slate-400 space-y-1">
+            <p>· Condiciones: 350 °C · 45 bar</p>
+            <p>· Control de coque: < 380 °C</p>
+            <p>· Flash D-104 + PSA-2 reciclo</p>
+          </div>
+        </div>
+
+        <!-- Bloque 4 -->
+        <div class="card-glass rounded-2xl p-6 space-y-4 border-t-2 border-t-blue-400 flex flex-col justify-between">
+          <div class="space-y-3">
+            <span class="text-xs font-mono text-slate-500">Etapa 04</span>
+            <h3 class="font-display text-lg font-bold text-slate-100">Tren de Fraccionamiento</h3>
+            <p class="text-xs text-slate-400 leading-relaxed">
+              4 columnas en serie: separador C-201 (incondensables), estabilizadora C-202 a 5 bar (GLP comercial), columna de vacío C-203 (naftas C6-C11) y columna de vacío C-204 a 0,1 bar con reflujo 15 para separar queroseno y HVO puro.
+            </p>
+          </div>
+          <div class="pt-3 border-t border-slate-800 text-[11px] font-mono text-slate-400 space-y-1">
+            <p>· Columnas de relleno RadFrac</p>
+            <p>· Operación a vacío: 0,1 bar</p>
+            <p>· HVO obtenido en fondo C-204</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- BALANCE DE MATERIA Y DISTRIBUCIÓN DE CORRIENTES (CHART INTERACTIVO) -->
+  <section class="py-24 px-6 border-t border-slate-900 bg-slate-900/30">
+    <div class="max-w-6xl mx-auto space-y-16">
+      <div class="fade-up max-w-3xl">
+        <span class="text-xs font-mono text-emerald-400 uppercase tracking-wider">Resultados Cuantitativos</span>
+        <h2 class="font-display text-3xl sm:text-4xl text-slate-100 font-bold mt-2">
+          Balance de Materia Global & Fracciones Comerciales
+        </h2>
+        <p class="mt-4 text-slate-400 leading-relaxed">
+          Sobre una alimentación total de 515,19 Tm/día (500 Tm UCO + 15,19 Tm H₂ fresco), la simulación converge con una distribución de productos útiles de alto valor añadido.
+        </p>
+      </div>
+
+      <!-- CHART DE RENDIMIENTOS Y TABLA DE CORRIENTES -->
+      <div class="card-glass rounded-3xl p-8 lg:p-10 fade-up grid lg:grid-cols-12 gap-10 items-center">
+        
+        <!-- Donut Chart -->
+        <div class="lg:col-span-5 flex flex-col items-center justify-center relative">
+          <div class="w-full max-w-[320px] aspect-square relative">
+            <canvas id="hvoYieldChart"></canvas>
+            <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none text-center">
+              <span class="text-xs font-mono text-slate-500 uppercase tracking-wider">HVO Refinado</span>
+              <span class="font-display text-2xl font-bold text-slate-100">396 <span class="text-xs text-emerald-400">Tm/d</span></span>
+              <span class="text-[11px] text-slate-400 font-mono">Pureza: 99,5%</span>
+            </div>
+          </div>
+          <p class="text-xs font-mono text-slate-500 mt-4 text-center">Distribución de corrientes de salida del proceso</p>
+        </div>
+
+        <!-- Desglose de Corrientes Principales -->
+        <div class="lg:col-span-7 space-y-4">
+          <div class="grid sm:grid-cols-2 gap-3 text-xs font-mono">
+            
+            <div class="p-4 rounded-xl bg-slate-900/60 border border-slate-800 space-y-1">
+              <div class="flex items-center justify-between">
+                <span class="flex items-center gap-2 text-emerald-400 font-semibold"><span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span> HVO Diésel (C17+)</span>
+                <span class="text-slate-100 font-bold">395,99 Tm/d</span>
+              </div>
+              <p class="text-slate-400 text-[11px]">76,86% p/p sobre alimentación. Obtenido en fondo de columna C-204 a 213 °C.</p>
+            </div>
+
+            <div class="p-4 rounded-xl bg-slate-900/60 border border-slate-800 space-y-1">
+              <div class="flex items-center justify-between">
+                <span class="flex items-center gap-2 text-cyan-400 font-semibold"><span class="w-2.5 h-2.5 rounded-full bg-cyan-400"></span> Queroseno / SAF (C16)</span>
+                <span class="text-slate-100 font-bold">12,11 Tm/d</span>
+              </div>
+              <p class="text-slate-400 text-[11px]">2,35% p/p. Destilado de cabeza de columna C-204 a vacío (corte C12-C16).</p>
+            </div>
+
+            <div class="p-4 rounded-xl bg-slate-900/60 border border-slate-800 space-y-1">
+              <div class="flex items-center justify-between">
+                <span class="flex items-center gap-2 text-blue-400 font-semibold"><span class="w-2.5 h-2.5 rounded-full bg-blue-400"></span> GLP Comercial (C3-C5)</span>
+                <span class="text-slate-100 font-bold">15,63 Tm/d</span>
+              </div>
+              <p class="text-slate-400 text-[11px]">3,03% p/p. Destilado de columna C-202 (propano procedente de la hidrogenólisis del glicerol).</p>
+            </div>
+
+            <div class="p-4 rounded-xl bg-slate-900/60 border border-slate-800 space-y-1">
+              <div class="flex items-center justify-between">
+                <span class="flex items-center gap-2 text-teal-400 font-semibold"><span class="w-2.5 h-2.5 rounded-full bg-teal-400"></span> Naftas Ligeras (C6-C11)</span>
+                <span class="text-slate-100 font-bold">10,23 Tm/d</span>
+              </div>
+              <p class="text-slate-400 text-[11px]">1,98% p/p. Destilado de C-203, rica en hexano y undecano utilizables como petroquímica.</p>
+            </div>
+
+            <div class="p-4 rounded-xl bg-slate-900/60 border border-slate-800 space-y-1 sm:col-span-2">
+              <div class="flex items-center justify-between">
+                <span class="flex items-center gap-2 text-slate-400 font-semibold"><span class="w-2.5 h-2.5 rounded-full bg-slate-400"></span> Corrientes Secundarias & Efluentes</span>
+                <span class="text-slate-100 font-bold">81,23 Tm/d</span>
+              </div>
+              <p class="text-slate-400 text-[11px]">Agua residual de decantación (31,81 Tm/d), agua de arrastre vapor PSA (27,30 Tm/d), incondensables CO/CO₂ (21,07 Tm/d) y purgas de gases (1,05 Tm/d).</p>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- INTEGRACIÓN ENERGÉTICA Y RED DE CALOR (HEATX) -->
+  <section class="py-24 px-6 border-t border-slate-900">
+    <div class="max-w-6xl mx-auto space-y-12">
+      <div class="fade-up max-w-3xl">
+        <span class="text-xs font-mono text-cyan-400 uppercase tracking-wider">Eficiencia Energética</span>
+        <h2 class="font-display text-3xl sm:text-4xl text-slate-100 font-bold mt-2">
+          Integración Térmica de Corrientes (HeatX)
+        </h2>
+        <p class="mt-4 text-slate-400 leading-relaxed">
+          Para minimizar el consumo de vapor de alta presión y gas de calentamiento, se diseñó una red de intercambio térmico cruzado aprovechando las corrientes calientes de salida de los reactores exotérmicos.
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-6 fade-up">
+        
+        <div class="card-glass rounded-2xl p-6 space-y-3">
+          <div class="w-10 h-10 rounded-xl bg-cyan-400/10 flex items-center justify-center text-cyan-400">
+            <i data-lucide="flame" class="w-5 h-5"></i>
+          </div>
+          <h3 class="font-display text-base font-bold text-slate-100">Precalentamiento E-101 / E-102</h3>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            La corriente de salida del reactor HDO (corriente 106 a 320 °C) cede su entalpía para precalentar la alimentación de UCO desde 27 °C hasta 310 °C antes del reactor, reduciendo la carga del horno H-101.
+          </p>
+        </div>
+
+        <div class="card-glass rounded-2xl p-6 space-y-3">
+          <div class="w-10 h-10 rounded-xl bg-emerald-400/10 flex items-center justify-center text-emerald-400">
+            <i data-lucide="zap" class="w-5 h-5"></i>
+          </div>
+          <h3 class="font-display text-base font-bold text-slate-100">Acondicionamiento E-103</h3>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            Intercambio entre la corriente efluente del isocraqueo (corriente 118 a 350 °C) y la reposición de hidrógeno fresco, elevando la temperatura de entrada al reactor R-102 a 340 °C sin gasto auxiliar.
+          </p>
+        </div>
+
+        <div class="card-glass rounded-2xl p-6 space-y-3">
+          <div class="w-10 h-10 rounded-xl bg-teal-400/10 flex items-center justify-center text-teal-400">
+            <i data-lucide="gauge" class="w-5 h-5"></i>
+          </div>
+          <h3 class="font-display text-base font-bold text-slate-100">Optimización de Utilities</h3>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            El coste diario de servicios auxiliares en régimen nominal se redujo a 2.090 $/día en Aspen Economics, logrando un balance energético optimizado con refrigeración estricta solo para condensadores a vacío.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- MODAL / LIGHTBOX FLOWSHEET ASPEN -->
+  <div id="flowsheetModal" class="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-md hidden items-center justify-center p-4 sm:p-8 transition-opacity duration-300">
+    <div class="relative max-w-6xl w-full max-h-[92vh] flex flex-col items-center">
+      <div class="w-full flex justify-between items-center mb-3 text-xs font-mono text-slate-400 px-1">
+        <span class="flex items-center gap-2 text-emerald-400 font-semibold">
+          <i data-lucide="layout-grid" class="w-4 h-4"></i> Flowsheet Completo de Simulación en Aspen Plus V14
+        </span>
+        <button onclick="closeModal('flowsheetModal')" class="text-slate-400 hover:text-white flex items-center gap-1 transition-colors cursor-pointer">
+          <span>Cerrar (Esc)</span>
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+      <div class="w-full rounded-2xl overflow-hidden border border-slate-800 bg-slate-900 shadow-2xl p-2 max-h-[82vh] overflow-auto">
+        <img src="../assets/img/hvo-aspen-flowsheet.png" alt="Flowsheet Aspen Plus HVO" class="w-full h-auto min-w-[900px] object-contain rounded-lg">
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL / LIGHTBOX COMPONENTES ASPEN -->
+  <div id="compModal" class="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-md hidden items-center justify-center p-4 sm:p-8 transition-opacity duration-300">
+    <div class="relative max-w-4xl w-full max-h-[92vh] flex flex-col items-center">
+      <div class="w-full flex justify-between items-center mb-3 text-xs font-mono text-slate-400 px-1">
+        <span class="flex items-center gap-2 text-cyan-400 font-semibold">
+          <i data-lucide="database" class="w-4 h-4"></i> Especificación de Componentes Químicos (Aspen Plus)
+        </span>
+        <button onclick="closeModal('compModal')" class="text-slate-400 hover:text-white flex items-center gap-1 transition-colors cursor-pointer">
+          <span>Cerrar (Esc)</span>
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+      <div class="w-full rounded-2xl overflow-hidden border border-slate-800 bg-white p-3 shadow-2xl max-h-[82vh] overflow-auto">
+        <img src="../assets/img/hvo-aspen-components.png" alt="Componentes Químicos Aspen" class="w-full h-auto object-contain rounded-lg">
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER NAVEGACIÓN -->
+  <footer class="py-16 px-6 border-t border-slate-900 bg-slate-950">
+    <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-6">
+      <div>
+        <p class="text-xs font-mono text-slate-500 uppercase tracking-wider">Siguiente Caso de Estudio</p>
+        <a href="tfg.html" class="font-display text-2xl text-slate-100 font-bold hover:text-emerald-400 transition-colors inline-flex items-center gap-2 mt-1">
+          Plataforma Web B2B (TFG) <i data-lucide="arrow-right" class="w-5 h-5"></i>
+        </a>
+      </div>
+      
+      <div class="flex items-center gap-4">
+        <a href="../assets/docs/Memoria_HVO_ETSII.pdf" download class="inline-flex items-center gap-2 border border-slate-800 hover:border-slate-600 text-slate-300 px-4 py-2 rounded-lg text-xs font-mono transition-colors">
+          <i data-lucide="download" class="w-3.5 h-3.5"></i> Descargar Memoria HVO
+        </a>
+        <a href="../index.html" class="inline-flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-slate-200 px-4 py-2 rounded-lg text-xs font-mono transition-colors">
+          Inicio
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- SCRIPTS -->
+  <script>
+    lucide.createIcons();
+
+    // Scroll Navbar Effect
+    const navInner = document.getElementById('navInner');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 20) {
+        navInner.classList.add('shadow-lg', 'shadow-black/40', 'border-slate-700/80');
+      } else {
+        navInner.classList.remove('shadow-lg', 'shadow-black/40', 'border-slate-700/80');
+      }
+    });
+
+    // Observer idéntico al index.html
+    const revealEls = document.querySelectorAll('.fade-up');
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('in');
+        } else {
+          e.target.classList.remove('in');
+        }
+      });
+    }, { 
+      threshold: 0.12, 
+      rootMargin: "0px 0px -50px 0px" 
+    });
+    revealEls.forEach(el => io.observe(el));
+
+    // Modales genéricos
+    function openModal(id) {
+      const modal = document.getElementById(id);
+      if (!modal) return;
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      document.body.style.overflow = 'hidden';
+      lucide.createIcons();
+    }
+
+    function closeModal(id) {
+      const modal = document.getElementById(id);
+      if (!modal) return;
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+      document.body.style.overflow = '';
+    }
+
+    // Cerrar al hacer clic en el backdrop
+    ['flowsheetModal', 'compModal'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.addEventListener('click', function(e) {
+          if (e.target === this) closeModal(id);
+        });
+      }
+    });
+
+    // Cerrar con Escape
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeModal('flowsheetModal');
+        closeModal('compModal');
+      }
+    });
+
+    // CHART.JS: DISTRIBUCIÓN DE CORRIENTES HVO
+    const ctxHvo = document.getElementById('hvoYieldChart').getContext('2d');
+    const hvoChart = new Chart(ctxHvo, {
+      type: 'doughnut',
+      data: {
+        labels: [
+          'HVO Diésel C17+ (76,9%)',
+          'GLP / Propano (3,0%)',
+          'Queroseno / SAF C16 (2,4%)',
+          'Naftas C6-C11 (2,0%)',
+          'Agua Residual & Off-gas (15,7%)'
+        ],
+        datasets: [{
+          data: [76.86, 3.03, 2.35, 1.98, 15.78],
+          backgroundColor: [
+            '#10b981', // Emerald
+            '#3b82f6', // Blue
+            '#22d3ee', // Cyan
+            '#2dd4bf', // Teal
+            '#475569'  // Slate
+          ],
+          borderColor: '#020617',
+          borderWidth: 4,
+          hoverOffset: 12
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        cutout: '70%',
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: '#0f172a',
+            titleColor: '#e2e8f0',
+            bodyColor: '#94a3b8',
+            borderColor: '#334155',
+            borderWidth: 1,
+            padding: 12,
+            displayColors: true,
+            callbacks: {
+              label: function(context) { return ' ' + context.label; }
+            }
+          }
+        },
+        animation: {
+          animateRotate: true,
+          duration: 1800
+        }
+      }
+    });
+    // Variable para controlar qué pestaña está activa
+    let activeDiagram = 'pfd';
+
+    function switchView(view) {
+    activeDiagram = view;
+    const viewPfd = document.getElementById('viewPfd');
+    const viewAspen = document.getElementById('viewAspen');
+    const btnPfd = document.getElementById('tabBtnPfd');
+    const btnAspen = document.getElementById('tabBtnAspen');
+
+    if (view === 'pfd') {
+        viewPfd.classList.remove('hidden');
+        viewAspen.classList.add('hidden');
+        btnPfd.className = 'px-3.5 py-1.5 rounded-lg text-xs font-mono font-medium transition-colors bg-emerald-400 text-slate-950 cursor-pointer';
+        btnAspen.className = 'px-3.5 py-1.5 rounded-lg text-xs font-mono font-medium transition-colors text-slate-400 hover:text-slate-200 cursor-pointer';
+    } else {
+        viewPfd.classList.add('hidden');
+        viewAspen.classList.remove('hidden');
+        btnAspen.className = 'px-3.5 py-1.5 rounded-lg text-xs font-mono font-medium transition-colors bg-emerald-400 text-slate-950 cursor-pointer';
+        btnPfd.className = 'px-3.5 py-1.5 rounded-lg text-xs font-mono font-medium transition-colors text-slate-400 hover:text-slate-200 cursor-pointer';
+    }
+    }
+
+    function openCurrentModal() {
+    if (activeDiagram === 'pfd') {
+        openModal('pfdModal');
+    } else {
+        openModal('flowsheetModal');
+    }
+    }
+    document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        closeModal('flowsheetModal');
+        closeModal('compModal');
+        closeModal('pfdModal');
+    }
+    });
+  </script>
+  <!-- MODAL / LIGHTBOX PARA EL PFD COMPLETO EN ALTA DEFINICIÓN -->
+  <div id="pfdModal" class="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-md hidden items-center justify-center p-3 sm:p-6 transition-opacity duration-300">
+    <div class="relative max-w-7xl w-full max-h-[94vh] flex flex-col items-center">
+      <div class="w-full flex justify-between items-center mb-2.5 text-xs font-mono text-slate-400 px-1">
+        <span class="flex items-center gap-2 text-emerald-400 font-semibold">
+          <i data-lucide="file-spreadsheet" class="w-4 h-4"></i> Diagrama de Flujo del Proceso (PFD Revisado con Balances y Presiones)
+        </span>
+        <button onclick="closeModal('pfdModal')" class="text-slate-400 hover:text-white flex items-center gap-1 transition-colors cursor-pointer">
+          <span>Cerrar (Esc)</span>
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+      <div class="w-full rounded-2xl overflow-hidden border border-slate-800 bg-white p-3 shadow-2xl max-h-[85vh] overflow-auto">
+        <img src="../assets/img/hvo-pfd-completo.png" alt="PFD Completo Alta Resolución" class="w-full h-auto min-w-[1100px] object-contain rounded-lg">
+      </div>
+      <div class="w-full p-2.5 bg-slate-950/90 mt-2 rounded-xl border border-slate-800 text-[11px] font-mono flex flex-wrap justify-between items-center gap-2 text-slate-400">
+        <span>Leyenda: [Rombo] = Temperatura (°C) | [Círculo] = Presión (bar) | [Rectángulo elipse] = Caudal Másico (Tm/d)</span>
+        <span class="text-emerald-400">Tren RadFrac a vacío (0,1 bar) con eyectores J-201 / J-202</span>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
