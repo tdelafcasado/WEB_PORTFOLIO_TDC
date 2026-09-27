@@ -57,8 +57,6 @@
   .fade-up { opacity: 0; transform: translateY(16px); transition: opacity .7s ease, transform .7s ease; }
   .fade-up.in { opacity: 1; transform: translateY(0); }
 
-  .tab-active { color: #020617; background-color: #22d3ee; }
-
   .molecule-orbit { animation: spin 24s linear infinite; transform-origin: center; }
   @keyframes spin { to { transform: rotate(360deg); } }
 
@@ -72,6 +70,16 @@
   }
 
   .num-tag { font-variant-numeric: tabular-nums; }
+
+  .tech-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    color: #94a3b8;
+    background: rgba(148,163,184,0.08);
+    border: 1px solid rgba(148,163,184,0.15);
+    padding: 0.25rem 0.65rem;
+    border-radius: 0.4rem;
+  }
 </style>
 </head>
 <body class="bg-slate-950 text-slate-300 font-body antialiased grain">
@@ -83,27 +91,39 @@
       <a href="#" class="font-display text-lg text-slate-100 flex items-baseline gap-1.5">
         Tomás <span class="text-cyan-400 text-sm font-mono">/eng-dev</span>
       </a>
-      <nav class="hidden md:flex items-center gap-8 text-sm text-slate-400">
+      <nav class="hidden md:flex items-center gap-7 text-sm text-slate-400">
         <a href="#sobre-mi" class="hover:text-slate-100 transition-colors">Sobre mí</a>
         <a href="#skills" class="hover:text-slate-100 transition-colors">Stack</a>
         <a href="#proyectos" class="hover:text-slate-100 transition-colors">Proyectos</a>
         <a href="#trayectoria" class="hover:text-slate-100 transition-colors">Trayectoria</a>
         <a href="#contacto" class="hover:text-slate-100 transition-colors">Contacto</a>
       </nav>
-      <a href="#contacto" class="hidden md:inline-flex items-center gap-2 bg-cyan-400 hover:bg-cyan-300 text-slate-950 text-sm font-medium px-4 py-2 rounded-lg transition-colors">
-        Contactar
-      </a>
+      
+      <!-- BOTONES ACCIÓN NAVBAR (Conóceme + Contactar) -->
+      <div class="hidden md:flex items-center gap-3">
+        <a href="sobre-mi.html" class="inline-flex items-center gap-1.5 border border-slate-700 hover:border-slate-500 bg-slate-900/60 text-slate-200 text-xs font-medium px-3.5 py-2 rounded-lg transition-colors">
+          <i data-lucide="user" class="w-3.5 h-3.5 text-cyan-400"></i>
+          Conóceme
+        </a>
+        <a href="#contacto" class="inline-flex items-center gap-2 bg-cyan-400 hover:bg-cyan-300 text-slate-950 text-xs font-semibold px-4 py-2 rounded-lg transition-colors">
+          Contactar
+        </a>
+      </div>
+
       <button id="menuBtn" class="md:hidden text-slate-200" aria-label="Abrir menú" aria-expanded="false">
         <i data-lucide="menu" class="w-6 h-6"></i>
       </button>
     </div>
+    
+    <!-- MENÚ MÓVIL -->
     <div id="mobileMenu" class="md:hidden max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
-      <div class="mt-2 glass border border-slate-800/60 rounded-2xl px-5 py-4 flex flex-col gap-4 text-sm text-slate-300">
+      <div class="mt-2 glass border border-slate-800/60 rounded-2xl px-5 py-4 flex flex-col gap-3 text-sm text-slate-300">
         <a href="#sobre-mi" class="mobile-link">Sobre mí</a>
         <a href="#skills" class="mobile-link">Stack</a>
         <a href="#proyectos" class="mobile-link">Proyectos</a>
         <a href="#trayectoria" class="mobile-link">Trayectoria</a>
-        <a href="#contacto" class="mobile-link text-cyan-400">Contactar</a>
+        <a href="sobre-mi.html" class="mobile-link text-cyan-400 font-medium">Ver Perfil Completo (Conóceme)</a>
+        <a href="#contacto" class="mobile-link text-emerald-400 font-medium">Contactar</a>
       </div>
     </div>
   </div>
@@ -132,8 +152,8 @@
         <a href="#proyectos" class="inline-flex items-center gap-2 bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-medium px-5 py-3 rounded-lg transition-colors">
           Ver proyectos <i data-lucide="arrow-down-right" class="w-4 h-4"></i>
         </a>
-        <a href="#contacto" class="inline-flex items-center gap-2 border border-slate-700 hover:border-slate-500 text-slate-200 px-5 py-3 rounded-lg transition-colors">
-          Hablemos
+        <a href="sobre-mi.html" class="inline-flex items-center gap-2 border border-slate-700 hover:border-slate-500 text-slate-200 px-5 py-3 rounded-lg transition-colors">
+          <i data-lucide="user" class="w-4 h-4 text-cyan-400"></i> Conóceme
         </a>
       </div>
     </div>
@@ -160,13 +180,17 @@
 <!-- SOBRE MI / BENTO -->
 <section id="sobre-mi" class="px-6 py-24 border-t border-slate-900">
   <div class="max-w-6xl mx-auto">
-    <div class="fade-up mb-12 max-w-2xl">
-      <h2 class="font-display text-3xl text-slate-100">Un perfil híbrido: proceso, cálculo y producto digital</h2>
-      <p class="mt-4 text-slate-400 leading-relaxed">
-        Formado como ingeniero de procesos, he ido construyendo herramientas propias —desde
-        scripts de cálculo termodinámico hasta plataformas web completas— para resolver
-        problemas que la simulación tradicional no cubre por sí sola.
-      </p>
+    <div class="fade-up mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6">
+      <div class="max-w-2xl">
+        <span class="text-xs font-mono text-cyan-400 uppercase tracking-wider">Perfil Técnico</span>
+        <h2 class="font-display text-3xl sm:text-4xl text-slate-100 font-bold mt-2">Un perfil híbrido: proceso, cálculo y producto digital</h2>
+        <p class="mt-4 text-slate-400 leading-relaxed">
+          Formado como ingeniero de procesos, desarrollo soluciones que combinan simulación rigurosa, modelado mecánico y desarrollo web analítico para resolver problemáticas industriales complejas.
+        </p>
+      </div>
+      <a href="sobre-mi.html" class="inline-flex items-center gap-2 text-sm font-mono text-cyan-400 hover:text-cyan-300 transition-colors border-b border-cyan-400/40 pb-1 w-fit group">
+        Conocer más sobre mi perfil <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
+      </a>
     </div>
 
     <div class="grid md:grid-cols-3 gap-4">
@@ -215,7 +239,7 @@
   <div class="max-w-6xl mx-auto">
     <div class="fade-up mb-12">
       <h2 class="font-display text-3xl text-slate-100">Stack técnico</h2>
-      <p class="mt-3 text-slate-400 max-w-xl">Herramientas que uso a diario, agrupadas por el problema que resuelven.</p>
+      <p class="mt-3 text-slate-400 max-w-xl">Herramientas agrupadas por área de aplicación técnica.</p>
     </div>
 
     <div class="grid md:grid-cols-3 gap-6">
@@ -238,18 +262,18 @@
           <li class="flex items-center justify-between border-b border-slate-800 pb-2.5"><span>Python</span><span class="font-mono text-xs text-slate-600">NumPy / SciPy</span></li>
           <li class="flex items-center justify-between border-b border-slate-800 pb-2.5"><span>MATLAB</span><span class="font-mono text-xs text-slate-600">cálculo</span></li>
           <li class="flex items-center justify-between border-b border-slate-800 pb-2.5"><span>Excel VBA</span><span class="font-mono text-xs text-slate-600">automatización</span></li>
-          <li class="flex items-center justify-between"><span>SQL</span><span class="font-mono text-xs text-slate-600">phpMyAdmin</span></li>
+          <li class="flex items-center justify-between"><span>SQL</span><span class="font-mono text-xs text-slate-600">MySQL</span></li>
         </ul>
       </div>
       <div class="fade-up" style="transition-delay:.1s">
         <h3 class="font-display text-slate-100 mb-4 flex items-center gap-2">
-          <i data-lucide="layout-grid" class="w-4 h-4 text-cyan-400"></i> Web & Herramientas
+          <i data-lucide="layout-grid" class="w-4 h-4 text-cyan-400"></i> Web & Fabricación
         </h3>
         <ul class="space-y-2.5 text-sm text-slate-400">
-          <li class="flex items-center justify-between border-b border-slate-800 pb-2.5"><span>HTML5 / CSS3</span><span class="font-mono text-xs text-slate-600">core</span></li>
+          <li class="flex items-center justify-between border-b border-slate-800 pb-2.5"><span>HTML5 / CSS3</span><span class="font-mono text-xs text-slate-600">frontend</span></li>
           <li class="flex items-center justify-between border-b border-slate-800 pb-2.5"><span>Tailwind / Bootstrap</span><span class="font-mono text-xs text-slate-600">UI</span></li>
-          <li class="flex items-center justify-between border-b border-slate-800 pb-2.5"><span>JavaScript / PHP</span><span class="font-mono text-xs text-slate-600">lógica</span></li>
-          <li class="flex items-center justify-between"><span>Fusion 360 / Moldflow</span><span class="font-mono text-xs text-slate-600">3D</span></li>
+          <li class="flex items-center justify-between border-b border-slate-800 pb-2.5"><span>PHP / JavaScript</span><span class="font-mono text-xs text-slate-600">lógica</span></li>
+          <li class="flex items-center justify-between"><span>Fusion 360 / Moldflow</span><span class="font-mono text-xs text-slate-600">CAD / DFM</span></li>
         </ul>
       </div>
     </div>
@@ -259,20 +283,19 @@
 <!-- SECCIÓN PROYECTOS (ZIG-ZAG SHOWCASE) -->
 <section id="proyectos" class="px-6 py-32 border-t border-slate-900 relative overflow-hidden">
   
-  <!-- Efecto de luz de fondo sutil -->
   <div class="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-cyan-500/5 blur-[120px] rounded-full pointer-events-none"></div>
 
   <div class="max-w-6xl mx-auto relative z-10">
     <div class="fade-up mb-20 md:w-2/3">
       <h2 class="font-display text-4xl sm:text-5xl text-slate-100 font-bold mb-4">Proyectos Destacados</h2>
       <p class="text-lg text-slate-400 leading-relaxed">
-        Una selección de trabajos que abarcan desde el análisis de viabilidad financiera y simulación de procesos, hasta el desarrollo del software necesario para gestionarlos.
+        Una selección de trabajos que abarcan desde el análisis de viabilidad financiera y simulación de procesos, hasta el desarrollo de plataformas B2B y diseño para la fabricación.
       </p>
     </div>
 
     <div class="space-y-32">
 
-      <!-- PROYECTO 1: PolyFuel (Texto Izquierda, Imagen Derecha) -->
+      <!-- PROYECTO 1: PolyFuel -->
       <article class="flex flex-col lg:flex-row items-center gap-12 group">
         <div class="w-full lg:w-1/2 fade-up space-y-6">
           <div class="flex items-center gap-3">
@@ -296,20 +319,14 @@
             </a>
           </div>
         </div>
-        <!-- Contenedor Imagen -->
         <div class="w-full lg:w-1/2 fade-up relative" style="transition-delay: 0.1s;">
-          <div class="aspect-[4/3] rounded-2xl overflow-hidden bg-slate-800 border border-slate-700/50 shadow-2xl shadow-cyan-900/20 relative group-hover:-translate-y-2 group-hover:shadow-cyan-500/20 transition-all duration-500">
-            <!-- Placeholder para tu imagen (por ejemplo, el render del Layout o el diagrama de bloques) -->
-            <div class="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-slate-800 to-slate-900">
-              <i data-lucide="factory" class="w-20 h-20 text-slate-700"></i>
-            </div>
-            <!-- Quita el div de arriba y pon tu etiqueta <img> real cuando la tengas: -->
-            <!-- <img src="assets/img/polyfuel-layout.jpg" alt="Layout Polyfuel" class="w-full h-full object-cover"> -->
+          <div class="aspect-[4/3] rounded-2xl overflow-hidden bg-slate-800 border border-slate-700/50 shadow-2xl shadow-cyan-900/20 relative group-hover:-translate-y-2 group-hover:shadow-cyan-500/20 transition-all duration-500 flex items-center justify-center bg-gradient-to-br from-slate-800 to-slate-900">
+            <i data-lucide="factory" class="w-20 h-20 text-slate-700"></i>
           </div>
         </div>
       </article>
 
-      <!-- PROYECTO 2: HVO (Imagen Izquierda, Texto Derecha) -->
+      <!-- PROYECTO 2: HVO -->
       <article class="flex flex-col lg:flex-row-reverse items-center gap-12 group">
         <div class="w-full lg:w-1/2 fade-up space-y-6">
           <div class="flex items-center gap-3">
@@ -332,17 +349,14 @@
             </a>
           </div>
         </div>
-        <!-- Contenedor Imagen -->
         <div class="w-full lg:w-1/2 fade-up relative" style="transition-delay: 0.1s;">
-          <div class="aspect-[4/3] rounded-2xl overflow-hidden bg-slate-800 border border-slate-700/50 shadow-2xl shadow-emerald-900/20 relative group-hover:-translate-y-2 group-hover:shadow-emerald-500/20 transition-all duration-500">
-            <div class="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-slate-800 to-slate-900">
-              <i data-lucide="git-merge" class="w-20 h-20 text-slate-700"></i>
-            </div>
+          <div class="aspect-[4/3] rounded-2xl overflow-hidden bg-slate-800 border border-slate-700/50 shadow-2xl shadow-emerald-900/20 relative group-hover:-translate-y-2 group-hover:shadow-emerald-500/20 transition-all duration-500 flex items-center justify-center bg-gradient-to-br from-slate-800 to-slate-900">
+            <i data-lucide="git-merge" class="w-20 h-20 text-slate-700"></i>
           </div>
         </div>
       </article>
 
-      <!-- PROYECTO 3: TFG Web (Texto Izquierda, Imagen Derecha) -->
+      <!-- PROYECTO 3: TFG Web -->
       <article class="flex flex-col lg:flex-row items-center gap-12 group">
         <div class="w-full lg:w-1/2 fade-up space-y-6">
           <div class="flex items-center gap-3">
@@ -352,7 +366,7 @@
             App B2B de Simbiosis Industrial (TFG)
           </h3>
           <p class="text-slate-400 leading-relaxed text-lg">
-            Diseño y desarrollo "Full-Stack" de una plataforma dinámica B2B para el intercambio de subproductos de la industria química. Una solución digital programada desde cero para fomentar la economía circular entre empresas del sector.
+            Diseño y desarrollo Full-Stack de una plataforma dinámica B2B para el intercambio de subproductos de la industria química. Una solución digital programada desde cero para fomentar la economía circular entre empresas del sector.
           </p>
           <div class="flex flex-wrap gap-2 pt-2">
             <span class="tech-tag">HTML5 / CSS</span>
@@ -365,17 +379,14 @@
             </a>
           </div>
         </div>
-        <!-- Contenedor Imagen -->
         <div class="w-full lg:w-1/2 fade-up relative" style="transition-delay: 0.1s;">
-          <div class="aspect-[4/3] rounded-2xl overflow-hidden bg-slate-800 border border-slate-700/50 shadow-2xl shadow-blue-900/20 relative group-hover:-translate-y-2 group-hover:shadow-blue-500/20 transition-all duration-500">
-            <div class="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-slate-800 to-slate-900">
-              <i data-lucide="layout-template" class="w-20 h-20 text-slate-700"></i>
-            </div>
+          <div class="aspect-[4/3] rounded-2xl overflow-hidden bg-slate-800 border border-slate-700/50 shadow-2xl shadow-blue-900/20 relative group-hover:-translate-y-2 group-hover:shadow-blue-500/20 transition-all duration-500 flex items-center justify-center bg-gradient-to-br from-slate-800 to-slate-900">
+            <i data-lucide="layout-template" class="w-20 h-20 text-slate-700"></i>
           </div>
         </div>
       </article>
 
-      <!-- PROYECTO 4: CAD / 3D (Imagen Izquierda, Texto Derecha) -->
+      <!-- PROYECTO 4: CAD / 3D -->
       <article class="flex flex-col lg:flex-row-reverse items-center gap-12 group">
         <div class="w-full lg:w-1/2 fade-up space-y-6">
           <div class="flex items-center gap-3">
@@ -385,12 +396,12 @@
             Modelado 3D para Componentes Industriales
           </h3>
           <p class="text-slate-400 leading-relaxed text-lg">
-            Demostración de capacidades de diseño asistido por ordenador (CAD). Desarrollo de placas de cavidad y núcleo para moldes de inyección utilizando tolerancias mecánicas y preparación para simulación de flujos.
+            Desarrollo de placas de cavidad y núcleo para moldes de inyección utilizando tolerancias mecánicas, análisis reológico en Moldflow y preparación para mecanizado CNC.
           </p>
           <div class="flex flex-wrap gap-2 pt-2">
             <span class="tech-tag">AutoCAD</span>
             <span class="tech-tag">Fusion 360</span>
-            <span class="tech-tag">Visión Espacial</span>
+            <span class="tech-tag">Moldflow</span>
           </div>
           <div class="pt-6">
             <a href="proyectos/moldes.html" class="inline-flex items-center gap-2 border border-slate-700 hover:border-slate-500 text-slate-200 hover:text-white font-medium px-6 py-3 rounded-lg transition-colors duration-300">
@@ -398,12 +409,9 @@
             </a>
           </div>
         </div>
-        <!-- Contenedor Imagen -->
         <div class="w-full lg:w-1/2 fade-up relative" style="transition-delay: 0.1s;">
-          <div class="aspect-[4/3] rounded-2xl overflow-hidden bg-slate-800 border border-slate-700/50 shadow-2xl shadow-slate-800/50 relative group-hover:-translate-y-2 group-hover:shadow-slate-700/50 transition-all duration-500">
-            <div class="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-slate-800 to-slate-900">
-              <i data-lucide="box" class="w-20 h-20 text-slate-700"></i>
-            </div>
+          <div class="aspect-[4/3] rounded-2xl overflow-hidden bg-slate-800 border border-slate-700/50 shadow-2xl shadow-slate-800/50 relative group-hover:-translate-y-2 group-hover:shadow-slate-700/50 transition-all duration-500 flex items-center justify-center bg-gradient-to-br from-slate-800 to-slate-900">
+            <i data-lucide="box" class="w-20 h-20 text-slate-700"></i>
           </div>
         </div>
       </article>
@@ -442,96 +450,64 @@
   </div>
 </section>
 
-<!-- CONTACTO -->
-<section id="contacto" class="px-6 py-24 border-t border-slate-900">
-  <div class="max-w-5xl mx-auto grid md:grid-cols-2 gap-14">
-    <div class="fade-up">
-      <h2 class="font-display text-3xl text-slate-100 mb-4">Hablemos de tu próximo proyecto</h2>
-      <p class="text-slate-400 leading-relaxed mb-8">
-        Abierto a colaboraciones en simulación de procesos, desarrollo de herramientas técnicas o
-        consultoría de I+D+i.
-      </p>
-      <div class="space-y-4 text-sm">
-        <a href="mailto:tomas@example.com" class="flex items-center gap-3 text-slate-300 hover:text-cyan-400 transition-colors">
-          <i data-lucide="mail" class="w-4 h-4"></i> tomas@example.com
-        </a>
-        <a href="#" class="flex items-center gap-3 text-slate-300 hover:text-cyan-400 transition-colors">
-          <i data-lucide="linkedin" class="w-4 h-4"></i> linkedin.com/in/tomas
-        </a>
-        <a href="#" class="flex items-center gap-3 text-slate-300 hover:text-cyan-400 transition-colors">
-          <i data-lucide="github" class="w-4 h-4"></i> github.com/tomas
-        </a>
-        <span class="flex items-center gap-3 text-slate-500">
-          <i data-lucide="map-pin" class="w-4 h-4"></i> Madrid, España
-        </span>
-      </div>
+<!-- CONTACTO (Directo y sin formularios estáticos rotos) -->
+<section id="contacto" class="px-6 py-28 border-t border-slate-900 bg-slate-900/30">
+  <div class="max-w-4xl mx-auto text-center space-y-8 fade-up">
+    <span class="inline-flex items-center gap-2 text-xs font-mono text-cyan-400 border border-cyan-400/30 bg-cyan-400/5 rounded-full px-3.5 py-1">
+      <span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
+      Contacto directo
+    </span>
+    
+    <h2 class="font-display text-3xl sm:text-5xl text-slate-100 font-bold tracking-tight">
+      ¿Hablamos sobre un proyecto o colaboración?
+    </h2>
+    
+    <p class="text-slate-400 max-w-xl mx-auto leading-relaxed text-base sm:text-lg">
+      Disponible para proyectos de simulación de procesos, desarrollo de software técnico o consultoría técnica de I+D+i.
+    </p>
+
+    <!-- Tarjetas de contacto directo -->
+    <div class="pt-4 grid sm:grid-cols-2 gap-4 max-w-xl mx-auto text-left">
+      <a href="mailto:tdelafcasado@gmail.com" class="card-glass rounded-2xl p-6 hover:border-cyan-400/50 transition-colors group flex items-start gap-4">
+        <div class="w-10 h-10 rounded-xl bg-cyan-400/10 flex items-center justify-center text-cyan-400 shrink-0 group-hover:scale-105 transition-transform">
+          <i data-lucide="mail" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <span class="text-xs font-mono text-slate-500 uppercase tracking-wider block">Correo Electrónico</span>
+          <span class="text-sm font-semibold text-slate-100 group-hover:text-cyan-400 transition-colors">tdelafcasado@gmail.com</span>
+        </div>
+      </a>
+
+      <a href="https://www.linkedin.com/in/tom%C3%A1s-de-la-fuente-casado-14b35435a/" target="_blank" rel="noopener noreferrer" class="card-glass rounded-2xl p-6 hover:border-cyan-400/50 transition-colors group flex items-start gap-4">
+        <div class="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-400 shrink-0 group-hover:scale-105 transition-transform">
+          <i data-lucide="linkedin" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <span class="text-xs font-mono text-slate-500 uppercase tracking-wider block">Red Profesional</span>
+          <span class="text-sm font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">Perfil de LinkedIn</span>
+        </div>
+      </a>
     </div>
 
-    <form class="fade-up space-y-4" style="transition-delay:.05s" onsubmit="return false;">
-      <div>
-        <label for="name" class="block text-sm text-slate-400 mb-1.5">Nombre</label>
-        <input id="name" type="text" class="w-full bg-slate-900/60 border border-slate-800 rounded-lg px-4 py-2.5 text-slate-200 placeholder-slate-600 focus:border-cyan-400 outline-none transition-colors" placeholder="Tu nombre">
-      </div>
-      <div>
-        <label for="email" class="block text-sm text-slate-400 mb-1.5">Email</label>
-        <input id="email" type="email" class="w-full bg-slate-900/60 border border-slate-800 rounded-lg px-4 py-2.5 text-slate-200 placeholder-slate-600 focus:border-cyan-400 outline-none transition-colors" placeholder="tu@email.com">
-      </div>
-      <div>
-        <label for="msg" class="block text-sm text-slate-400 mb-1.5">Mensaje</label>
-        <textarea id="msg" rows="4" class="w-full bg-slate-900/60 border border-slate-800 rounded-lg px-4 py-2.5 text-slate-200 placeholder-slate-600 focus:border-cyan-400 outline-none transition-colors resize-none" placeholder="Cuéntame en qué estás trabajando"></textarea>
-      </div>
-      <button type="submit" class="w-full bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-medium py-3 rounded-lg transition-colors">
-        Enviar mensaje
-      </button>
-    </form>
+    <div class="pt-2 flex justify-center items-center gap-2 text-xs font-mono text-slate-500">
+      <i data-lucide="map-pin" class="w-3.5 h-3.5 text-cyan-400"></i>
+      <span>Madrid, España · Movilidad geográfica nacional</span>
+    </div>
   </div>
 </section>
 
-<footer class="px-6 py-8 border-t border-slate-900">
+<!-- FOOTER -->
+<footer class="px-6 py-8 border-t border-slate-900 bg-slate-950">
   <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-600">
     <p>© 2026 Tomás. Ingeniería Química & Desarrollo.</p>
-    <p class="font-mono">Madrid, España</p>
+    <div class="flex items-center gap-4">
+      <a href="sobre-mi.html" class="hover:text-slate-400 transition-colors">Sobre mí</a>
+      <a href="mailto:tdelafcasado@gmail.com" class="hover:text-slate-400 transition-colors">Contacto</a>
+    </div>
   </div>
 </footer>
 
-<!-- MODALES -->
-<div id="modalOverlay" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-[60] hidden items-center justify-center px-6">
-  <div id="modalPanel" class="card-glass max-w-lg w-full rounded-2xl p-8 relative max-h-[85vh] overflow-y-auto">
-    <button id="closeModal" class="absolute top-5 right-5 text-slate-500 hover:text-slate-200" aria-label="Cerrar">
-      <i data-lucide="x" class="w-5 h-5"></i>
-    </button>
-    <div id="modalContent"></div>
-  </div>
-</div>
-
 <script>
-  const modalData = {
-    m1: {
-      title: "Plataforma de intercambio de subproductos industriales",
-      cat: "Desarrollo Web / Residuos / Economía Circular",
-      body: "Aplicación web B2B construida para conectar empresas de la industria química que generan corrientes secundarias con potenciales consumidoras de las mismas, favoreciendo la simbiosis industrial. El proyecto —desarrollado como Trabajo de Fin de Grado— incluye el estudio de la normativa de gestión de residuos aplicable, el diseño de la base de datos relacional y el desarrollo completo del backend y frontend.",
-      stack: ["HTML5", "PHP", "Bootstrap", "JavaScript", "MySQL"]
-    },
-    m2: {
-      title: "Planta de producción de biodiésel HVO",
-      cat: "Ingeniería / Simulación",
-      body: "Modelización completa en Aspen Plus del proceso de hidrotratamiento de aceites vegetales usados (HVO) para la obtención de biocombustible renovable. Incluye balances de materia y energía, integración energética del proceso, diagrama de flujo de proceso (PFD) detallado y una estimación económica preliminar de la planta.",
-      stack: ["Aspen Plus", "Balances M/E", "Modelos termodinámicos", "PFD"]
-    },
-    m3: {
-      title: "Cavidades de inyección de plásticos",
-      cat: "Ingeniería / 3D",
-      body: "Diseño en Fusion 360 de las placas de cavidad y núcleo de un molde de inyección de plásticos, incluyendo la selección de herramientas de mecanizado adecuadas y un análisis del flujo de polímero fundido con Moldflow para anticipar defectos de llenado.",
-      stack: ["Fusion 360", "Moldflow", "Manufactura"]
-    },
-    m4: {
-      title: "Scripts de simulación termodinámica",
-      cat: "Software / Datos",
-      body: "Conjunto de scripts en Python para el cálculo de equilibrios de fases y propiedades termodinámicas de mezclas, implementando los modelos NRTL, Peng-Robinson y UNIFAC. Pensado como herramienta de apoyo a la simulación de procesos cuando los paquetes comerciales no cubren un caso concreto.",
-      stack: ["Python", "NumPy", "SciPy"]
-    }
-  };
-
   function initIcons() { lucide.createIcons(); }
   initIcons();
 
@@ -571,85 +547,22 @@
   });
 
   // Scroll reveal
-  // CÓDIGO NUEVO (Se anima siempre al entrar y salir del scroll)
   const revealEls = document.querySelectorAll('.fade-up');
   const io = new IntersectionObserver((entries) => {
     entries.forEach(e => {
       if (e.isIntersecting) {
         e.target.classList.add('in');
       } else {
-        // Si la sección sale del visor (por arriba o por abajo), se reinicia
-        // Opcional: solo si quieres que vuelva a ocultarse al salir de pantalla
         e.target.classList.remove('in');
       }
     });
   }, { 
-    threshold: 0.12, // Se activa cuando al menos el 12% del bloque es visible
-    rootMargin: "0px 0px -50px 0px" // Da un margen natural antes de activarse
+    threshold: 0.12,
+    rootMargin: "0px 0px -50px 0px"
   });
 
   revealEls.forEach(el => io.observe(el));
-
-  // Project filter
-  const filterBtns = document.querySelectorAll('.filter-btn');
-  const projectCards = document.querySelectorAll('.project-card');
-  filterBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      filterBtns.forEach(b => {
-        b.classList.remove('tab-active');
-        b.classList.add('border-slate-700', 'text-slate-400');
-      });
-      btn.classList.add('tab-active');
-      btn.classList.remove('border-slate-700', 'text-slate-400');
-
-      const filter = btn.dataset.filter;
-      projectCards.forEach(card => {
-        const show = filter === 'todos' || card.dataset.cat === filter;
-        card.style.display = show ? '' : 'none';
-      });
-    });
-  });
-
-  // Modal
-  const overlay = document.getElementById('modalOverlay');
-  const modalContent = document.getElementById('modalContent');
-  document.querySelectorAll('.open-modal').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const data = modalData[btn.dataset.modal];
-      modalContent.innerHTML = `
-        <p class="text-xs font-mono text-cyan-400 mb-2">${data.cat}</p>
-        <h3 class="font-display text-2xl text-slate-100 mb-4">${data.title}</h3>
-        <p class="text-slate-400 leading-relaxed mb-6">${data.body}</p>
-        <div class="flex flex-wrap gap-2">
-          ${data.stack.map(t => `<span class="tech-tag">${t}</span>`).join('')}
-        </div>
-      `;
-      overlay.classList.remove('hidden');
-      overlay.classList.add('flex');
-      document.body.style.overflow = 'hidden';
-    });
-  });
-  function closeModalFn() {
-    overlay.classList.add('hidden');
-    overlay.classList.remove('flex');
-    document.body.style.overflow = '';
-  }
-  document.getElementById('closeModal').addEventListener('click', closeModalFn);
-  overlay.addEventListener('click', (e) => { if (e.target === overlay) closeModalFn(); });
-  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModalFn(); });
 </script>
-
-<style>
-  .tech-tag {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.7rem;
-    color: #94a3b8;
-    background: rgba(148,163,184,0.08);
-    border: 1px solid rgba(148,163,184,0.15);
-    padding: 0.25rem 0.6rem;
-    border-radius: 0.4rem;
-  }
-</style>
 
 </body>
 </html>
