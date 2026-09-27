@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Diseño de Molde & Análisis Reológico — Fusion 360 & Moldflow | Tomás</title>
+  <meta name="description" content="Diseño para la fabricación (DFM), optimización reológica en Moldflow Adviser y mecanizado CNC de molde de 3 cavidades para protector de membrana en ABS.">
+  
+  <!-- Tailwind CSS & Lucide Icons -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Chart.js vía CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+  <!-- Fuentes Google: Space Grotesk, Inter, JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ['Space Grotesk', 'sans-serif'],
+            body: ['Inter', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            cyan: { 400: '#22d3ee', 500: '#06b6d4', 950: '#083344' },
+            emerald: { 400: '#34d399', 500: '#10b981', 950: '#064e3b' },
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    html { scroll-padding-top: 90px; }
+    body { background-color: #020617; }
+    ::selection { background-color: #38bdf8; color: #020617; }
+
+    .grain {
+      background-image: radial-gradient(circle at 1px 1px, rgba(148,163,184,0.07) 1px, transparent 0);
+      background-size: 24px 24px;
+    }
+
+    .glass {
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+
+    .card-glass {
+      background: linear-gradient(180deg, rgba(30,41,59,0.55), rgba(15,23,42,0.65));
+      border: 1px solid rgba(148,163,184,0.12);
+    }
+
+    /* Animación estándar idéntica al index.html */
+    .fade-up { 
+      opacity: 0; 
+      transform: translateY(16px); 
+      transition: opacity .7s ease, transform .7s ease; 
+    }
+    .fade-up.in { 
+      opacity: 1; 
+      transform: translateY(0); 
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .fade-up { transition: none; opacity: 1; transform: none; }
+    }
+
+    .tech-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      color: #94a3b8;
+      background: rgba(148,163,184,0.08);
+      border: 1px solid rgba(148,163,184,0.15);
+      padding: 0.25rem 0.65rem;
+      border-radius: 0.4rem;
+    }
+
+    .num-tabular { font-variant-numeric: tabular-nums; }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-300 font-body antialiased grain">
+
+  <!-- NAVBAR FLOTANTE -->
+  <header id="navbar" class="fixed top-0 inset-x-0 z-40 transition-all duration-300">
+    <div class="max-w-6xl mx-auto px-6">
+      <div id="navInner" class="mt-4 rounded-2xl glass border border-slate-800/70 px-5 py-3 flex items-center justify-between transition-all duration-300">
+        <a href="../index.html" class="inline-flex items-center gap-2 text-sm font-medium text-slate-300 hover:text-cyan-400 transition-colors group">
+          <i data-lucide="arrow-left" class="w-4 h-4 group-hover:-translate-x-1 transition-transform"></i>
+          Volver al portfolio
+        </a>
+        <div class="flex items-center gap-3">
+          <span class="text-xs font-mono text-slate-500 hidden sm:inline-block">Ingeniería de Fabricación</span>
+          <span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
+          <span class="text-xs font-mono text-cyan-400">CAD 3D · Moldflow Adviser</span>
+        </div>
+        <a href="../assets/docs/Memoria_Moldeo_Mecanizado.pdf" download class="inline-flex items-center gap-2 bg-cyan-400 hover:bg-cyan-300 text-slate-950 text-xs font-semibold px-3.5 py-1.5 rounded-lg transition-colors">
+          <i data-lucide="download" class="w-3.5 h-3.5"></i>
+          Descargar Memoria (PDF)
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO SECTION -->
+  <section class="relative pt-36 pb-20 px-6 overflow-hidden">
+    <div class="absolute -top-24 right-[-10%] w-[500px] h-[500px] rounded-full bg-cyan-500/10 blur-[120px] pointer-events-none"></div>
+    <div class="absolute top-1/2 left-[-15%] w-[420px] h-[420px] rounded-full bg-blue-500/10 blur-[120px] pointer-events-none"></div>
+
+    <div class="max-w-6xl mx-auto space-y-12">
+      <div class="fade-up space-y-6 max-w-4xl">
+        <div class="flex flex-wrap items-center gap-3">
+          <span class="inline-flex items-center gap-1.5 text-xs font-mono text-cyan-400 border border-cyan-400/30 bg-cyan-400/5 rounded-full px-3 py-1">
+            <i data-lucide="box" class="w-3.5 h-3.5"></i> DFM & Reología de Polímeros
+          </span>
+          <span class="text-xs font-mono text-slate-500 border border-slate-800 rounded-full px-3 py-1">
+            Autodesk Moldflow Adviser
+          </span>
+          <span class="text-xs font-mono text-slate-500 border border-slate-800 rounded-full px-3 py-1">
+            Autodesk Fusion 360
+          </span>
+        </div>
+
+        <h1 class="font-display text-4xl sm:text-6xl text-slate-100 font-bold tracking-tight leading-[1.1]">
+          Diseño Paramétrico de Molde & Simulación Reológica de Inyección
+        </h1>
+
+        <p class="text-lg sm:text-xl text-slate-400 leading-relaxed max-w-3xl">
+          Ingeniería de detalle para un componente acústico de pared delgada en <b>LG ABS HF-380</b>: optimización reológica multicavidad a 120°, diseño del circuito de refrigeración conformal, cálculo de fuerza de cierre en empaquetamiento y hoja de procesos CNC bajo estándar <b>HASCO / Sandvik Coromant</b>.
+        </p>
+
+        <div class="pt-2 flex flex-wrap items-center gap-4">
+          <a href="../assets/docs/Memoria_Moldeo_Mecanizado.pdf" download class="inline-flex items-center gap-2.5 bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-medium px-6 py-3 rounded-xl transition-all shadow-lg shadow-cyan-500/20">
+            <i data-lucide="file-text" class="w-4 h-4"></i>
+            Descargar Memoria Completa (PDF)
+          </a>
+          <a href="#simulacion" class="inline-flex items-center gap-2 border border-slate-700 hover:border-slate-500 text-slate-300 hover:text-white px-5 py-3 rounded-xl transition-colors">
+            Explorar Simulación Reológica <i data-lucide="arrow-down" class="w-4 h-4"></i>
+          </a>
+        </div>
+      </div>
+
+      <!-- VISOR PRINCIPAL: GALERÍA DE PANTALLAS TÉCNICAS (5 PESTAÑAS) -->
+      <div class="fade-up card-glass rounded-2xl p-5 sm:p-7 border border-slate-800 shadow-2xl relative overflow-hidden">
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-4 border-b border-slate-800 pb-3">
+          
+          <!-- Pestañas para alternar pantallas -->
+          <div class="flex flex-wrap items-center gap-1.5 sm:gap-2 bg-slate-900/80 p-1.5 rounded-xl border border-slate-800/80">
+            <button id="tabBtnPieza" onclick="switchMoldView('pieza')" class="px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-mono font-medium transition-colors bg-cyan-400 text-slate-950 cursor-pointer">
+              <i data-lucide="layers" class="w-3.5 h-3.5 inline mr-1"></i> 1. Pieza & Placas
+            </button>
+            <button id="tabBtnLlenado" onclick="switchMoldView('llenado')" class="px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-mono font-medium transition-colors text-slate-400 hover:text-slate-200 cursor-pointer">
+              <i data-lucide="gauge" class="w-3.5 h-3.5 inline mr-1"></i> 2. Llenado
+            </button>
+            <button id="tabBtnRefrig" onclick="switchMoldView('refrig')" class="px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-mono font-medium transition-colors text-slate-400 hover:text-slate-200 cursor-pointer">
+              <i data-lucide="snowflake" class="w-3.5 h-3.5 inline mr-1"></i> 3. Refrigeración
+            </button>
+            <button id="tabBtnAlabeo" onclick="switchMoldView('alabeo')" class="px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-mono font-medium transition-colors text-slate-400 hover:text-slate-200 cursor-pointer">
+              <i data-lucide="ruler" class="w-3.5 h-3.5 inline mr-1"></i> 4. Alabeo (0.2 mm)
+            </button>
+            <button id="tabBtnCnc" onclick="switchMoldView('cnc')" class="px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-mono font-medium transition-colors text-slate-400 hover:text-slate-200 cursor-pointer">
+              <i data-lucide="file-spreadsheet" class="w-3.5 h-3.5 inline mr-1"></i> 5. Plano CNC
+            </button>
+          </div>
+
+          <button onclick="openCurrentMoldModal()" class="inline-flex items-center gap-1.5 text-xs font-mono text-cyan-400 hover:text-cyan-300 cursor-pointer self-end lg:self-auto">
+            <i data-lucide="maximize-2" class="w-3.5 h-3.5"></i> Ampliar vista activa (HD)
+          </button>
+        </div>
+
+        <!-- MARCO ADAPTABLE (Sin franjas negras forzadas) -->
+        <div class="rounded-xl overflow-hidden border border-slate-800 bg-slate-900 shadow-inner">
+          
+          <!-- Barra superior tipo monitor -->
+          <div class="h-8 bg-slate-900 border-b border-slate-800/80 px-4 flex items-center justify-between select-none">
+            <div class="flex items-center gap-1.5">
+              <span class="w-2.5 h-2.5 rounded-full bg-rose-500/80"></span>
+              <span class="w-2.5 h-2.5 rounded-full bg-amber-500/80"></span>
+              <span class="w-2.5 h-2.5 rounded-full bg-emerald-500/80"></span>
+            </div>
+            <span class="text-[11px] font-mono text-slate-500 hidden sm:inline-block">Autodesk Moldflow Adviser / Fusion 360 Workspace</span>
+            <div class="w-10"></div>
+          </div>
+
+          <!-- VISTA 1: PIEZA Y PLACAS 3D -->
+          <div id="viewPieza" onclick="openModal('piezaModal')" class="w-full cursor-zoom-in group relative overflow-hidden bg-slate-950 flex items-center justify-center p-2">
+            <img src="../assets/img/moldes-pieza-conjunto.png" alt="Conjunto 3D Pieza y Placas de Molde" class="w-full h-auto block group-hover:scale-[1.01] transition-transform duration-300 rounded">
+            <div class="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 text-white font-mono text-xs">
+              <i data-lucide="zoom-in" class="w-5 h-5 text-cyan-400"></i> Clic para ver modelado de pieza microperforada, cavidad y núcleo
+            </div>
+          </div>
+
+          <!-- VISTA 2: LLENADO Y CANALES -->
+          <div id="viewLlenado" onclick="openModal('llenadoModal')" class="hidden w-full cursor-zoom-in group relative overflow-hidden bg-slate-950 flex items-center justify-center p-2">
+            <img src="../assets/img/moldes-simulacion-llenado.png" alt="Simulación de Llenado Moldflow" class="w-full h-auto block group-hover:scale-[1.01] transition-transform duration-300 rounded">
+            <div class="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 text-white font-mono text-xs">
+              <i data-lucide="zoom-in" class="w-5 h-5 text-cyan-400"></i> Clic para inspeccionar balance de presiones y canales submarinos
+            </div>
+          </div>
+
+          <!-- VISTA 3: CIRCUITO DE REFRIGERACIÓN -->
+          <div id="viewRefrig" onclick="openModal('refrigModal')" class="hidden w-full cursor-zoom-in group relative overflow-hidden bg-slate-950 flex items-center justify-center p-2">
+            <img src="../assets/img/moldes-circuito-refrigeracion.png" alt="Circuito de Refrigeración Forzada" class="w-full h-auto block group-hover:scale-[1.01] transition-transform duration-300 rounded">
+            <div class="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 text-white font-mono text-xs">
+              <i data-lucide="zoom-in" class="w-5 h-5 text-cyan-400"></i> Clic para inspeccionar el circuito conformal de refrigeración
+            </div>
+          </div>
+
+          <!-- VISTA 4: ALABEO Y DEFLEXIÓN -->
+          <div id="viewAlabeo" onclick="openModal('alabeoModal')" class="hidden w-full cursor-zoom-in group relative overflow-hidden bg-slate-950 flex items-center justify-center p-2">
+            <img src="../assets/img/moldes-mapa-alabeo.png" alt="Mapa de Deflexión y Alabeo" class="w-full h-auto block group-hover:scale-[1.01] transition-transform duration-300 rounded">
+            <div class="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 text-white font-mono text-xs">
+              <i data-lucide="zoom-in" class="w-5 h-5 text-cyan-400"></i> Clic para inspeccionar la escala de deflexión (0,21 mm máx.)
+            </div>
+          </div>
+
+          <!-- VISTA 5: HOJA DE FASE CNC -->
+          <div id="viewCnc" onclick="openModal('cncModal')" class="hidden w-full cursor-zoom-in group relative overflow-hidden bg-white flex items-center justify-center p-3">
+            <img src="../assets/img/moldes-hoja-fase-cnc.png" alt="Plano de Taller y Herramientas Sandvik" class="w-full h-auto block group-hover:scale-[1.01] transition-transform duration-300 rounded">
+            <div class="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 text-white font-mono text-xs">
+              <i data-lucide="zoom-in" class="w-5 h-5 text-cyan-400"></i> Clic para inspeccionar plano acotado de placa y herramientas Sandvik
+            </div>
+          </div>
+
+        </div>
+
+        <p class="text-xs text-slate-500 text-center mt-3 font-mono">
+          Flujo de ingeniería de fabricación: Modelado DFM → Simulación Reológica (MFA) → Refrigeración Conformal → Alabeo Controlado → Mecanizado CNC.
+        </p>
+      </div>
+
+      <!-- KPI METRICS GRID -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 fade-up">
+        <div class="card-glass rounded-2xl p-6">
+          <p class="text-xs font-mono text-slate-500 uppercase tracking-wider mb-2">Tiempo de Ciclo</p>
+          <p class="font-display text-3xl sm:text-4xl text-slate-100 font-bold num-tabular">12,04 <span class="text-base text-cyan-400 font-normal">s</span></p>
+          <p class="text-xs text-slate-400 mt-2">Optimizado desde 14,00 s ajustando packing a 2,2 s</p>
+        </div>
+
+        <div class="card-glass rounded-2xl p-6">
+          <p class="text-xs font-mono text-slate-500 uppercase tracking-wider mb-2">Presión Inyección</p>
+          <p class="font-display text-3xl sm:text-4xl text-emerald-400 font-bold num-tabular">43,7 <span class="text-base text-slate-200 font-normal">MPa</span></p>
+          <p class="text-xs text-slate-400 mt-2">Llenado completo de rejilla en apenas 0,56 s</p>
+        </div>
+
+        <div class="card-glass rounded-2xl p-6">
+          <p class="text-xs font-mono text-slate-500 uppercase tracking-wider mb-2">Fuerza de Cierre</p>
+          <p class="font-display text-3xl sm:text-4xl text-cyan-400 font-bold num-tabular">31,5 <span class="text-base text-slate-200 font-normal">t</span></p>
+          <p class="text-xs text-slate-400 mt-2">Prensa Meteor EVO 55H (550 kN de capacidad)</p>
+        </div>
+
+        <div class="card-glass rounded-2xl p-6">
+          <p class="text-xs font-mono text-slate-500 uppercase tracking-wider mb-2">Deflexión Máxima</p>
+          <p class="font-display text-3xl sm:text-4xl text-slate-100 font-bold num-tabular">0,21 <span class="text-base text-cyan-400 font-normal">mm</span></p>
+          <p class="text-xs text-slate-400 mt-2">Solo 0,35% del diámetro exterior (tolerancia estricta)</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CIENCIA DE MATERIALES Y POLÍMEROS -->
+  <section class="py-24 px-6 border-t border-slate-900 bg-slate-900/30">
+    <div class="max-w-6xl mx-auto space-y-16">
+      <div class="fade-up max-w-3xl">
+        <span class="text-xs font-mono text-cyan-400 uppercase tracking-wider">Ciencia de Materiales & Reología</span>
+        <h2 class="font-display text-3xl sm:text-4xl text-slate-100 font-bold mt-2">
+          Selección del Polímero: LG ABS HF-380
+        </h2>
+        <p class="mt-4 text-slate-400 leading-relaxed">
+          El componente es un protector de membrana para auriculares de alta fidelidad. Su geometría presenta una celosía microperforada de pared delgada que exige un equilibrio estricto entre fluidez reológica a alta cizalla, resistencia al impacto y estabilidad térmica.
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-6 fade-up">
+        
+        <div class="card-glass rounded-2xl p-7 space-y-4 border-t-2 border-t-cyan-400">
+          <div class="w-10 h-10 rounded-xl bg-cyan-400/10 flex items-center justify-center text-cyan-400">
+            <i data-lucide="wind" class="w-5 h-5"></i>
+          </div>
+          <h3 class="font-display text-lg font-bold text-slate-100">Grado High Flow (Alta Fluidez)</h3>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            La alta tasa de cizalla requerida para sortear los machos de la celosía se solventa con el grado HF-380. Su bajo índice de viscosidad en fundido minimiza la pérdida de carga hidráulica y previene líneas de unión frías (<i>weld lines</i>) en la unión de los frentes de flujo.
+          </p>
+          <div class="pt-2 text-[11px] font-mono text-slate-500 border-t border-slate-800">
+            <span>· Presión reducida: 43,74 MPa</span><br>
+            <span>· Menor tensión residual interna</span>
+          </div>
+        </div>
+
+        <div class="card-glass rounded-2xl p-7 space-y-4 border-t-2 border-t-emerald-400">
+          <div class="w-10 h-10 rounded-xl bg-emerald-400/10 flex items-center justify-center text-emerald-400">
+            <i data-lucide="shield" class="w-5 h-5"></i>
+          </div>
+          <h3 class="font-display text-lg font-bold text-slate-100">Impacto & Comportamiento Eléctrico</h3>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            La fase elastomérica de polibutadieno dispersa en la matriz de estireno-acrilonitrilo asegura la tenacidad necesaria para proteger la bobina móvil del transductor acústico, garantizando aislamiento dieléctrico ante los circuitos de audio.
+          </p>
+          <div class="pt-2 text-[11px] font-mono text-slate-500 border-t border-slate-800">
+            <span>· Resistencia al impacto Izod</span><br>
+            <span>· Clasificación ignífuga UL94 HB</span>
+          </div>
+        </div>
+
+        <div class="card-glass rounded-2xl p-7 space-y-4 border-t-2 border-t-blue-400">
+          <div class="w-10 h-10 rounded-xl bg-blue-400/10 flex items-center justify-center text-blue-400">
+            <i data-lucide="thermometer" class="w-5 h-5"></i>
+          </div>
+          <h3 class="font-display text-lg font-bold text-slate-100">Termodinámica del Molde</h3>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            Ventana de procesamiento térmico establecida a 60 °C en pared de molde (rango fabricante 40–70 °C). Esta temperatura optimiza la cristalización y relajación molecular, reduciendo el alabeo térmico diferencial a un valor despreciable de 0,21 mm.
+          </p>
+          <div class="pt-2 text-[11px] font-mono text-slate-500 border-t border-slate-800">
+            <span>· Temperatura de fundido: 230 °C</span><br>
+            <span>· Coeficiente de contracción predecible</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- INGENIERÍA DEL MOLDE & SIMULACIÓN EN MOLDFLOW -->
+  <section id="simulacion" class="py-24 px-6 border-t border-slate-900">
+    <div class="max-w-6xl mx-auto space-y-16">
+      <div class="fade-up max-w-3xl">
+        <span class="text-xs font-mono text-emerald-400 uppercase tracking-wider">Simulación de Proceso CAE</span>
+        <h2 class="font-display text-3xl sm:text-4xl text-slate-100 font-bold mt-2">
+          Estudio Multicavidad & Optimización Reológica
+        </h2>
+        <p class="mt-4 text-slate-400 leading-relaxed">
+          Para un lote de 150.000 piezas, el análisis técnico-económico determinó que una configuración radial de 3 cavidades a 120° maximiza la productividad y reduce el coste por pieza a 0,23 €, generando un ahorro de 13.500 € frente a un molde monocavidad.
+        </p>
+      </div>
+
+      <!-- DESGLOSE TÉCNICO DE MOLDFLOW -->
+      <div class="grid lg:grid-cols-2 gap-8 items-center fade-up">
+        
+        <div class="space-y-4">
+          <div class="card-glass rounded-2xl p-6 space-y-2">
+            <h4 class="font-display text-base font-bold text-slate-100 flex items-center gap-2">
+              <i data-lucide="git-fork" class="w-4 h-4 text-cyan-400"></i> Entradas Submarinas & Runner Adviser
+            </h4>
+            <p class="text-xs text-slate-400 leading-relaxed">
+              Alimentación mediante punto submarino en arco cónico (<i>Circular Tapered Arc</i>, diámetro de entrada 4 mm a 0,7 mm en compuerta). Se optimizó la sección de los bebederos y canales con <i>Runner Adviser</i>, reduciendo el volumen de masa muerta (scrap rate) a solo el 5,33%.
+            </p>
+          </div>
+
+          <div class="card-glass rounded-2xl p-6 space-y-2">
+            <h4 class="font-display text-base font-bold text-slate-100 flex items-center gap-2">
+              <i data-lucide="snowflake" class="w-4 h-4 text-emerald-400"></i> Circuito de Refrigeración Conformal
+            </h4>
+            <p class="text-xs text-slate-400 leading-relaxed">
+              Circuito pasante en serpentín perforado a 18 mm de profundidad. Disipa el calor latente de solidificación de forma uniforme en las tres cavidades, evitando puntos calientes en el centro de la pieza y fijando el tiempo de enfriamiento en 4,30 s con un 100% de capa sólida en los expulsores.
+            </p>
+          </div>
+
+          <div class="card-glass rounded-2xl p-6 space-y-2">
+            <h4 class="font-display text-base font-bold text-slate-100 flex items-center gap-2">
+              <i data-lucide="cpu" class="w-4 h-4 text-blue-400"></i> Dimensionamiento de Prensa de Inyección
+            </h4>
+            <p class="text-xs text-slate-400 leading-relaxed">
+              El análisis de presión durante la fase de empaquetamiento (<i>packing</i>) reveló un pico de fuerza de cierre de 31,51 toneladas (309 kN). Se seleccionó la inyectora hidráulica <b>Mateu-Solé Meteor EVO 55H (550 kN, 72 cm³ de inyección y 2.270 bar)</b>, garantizando un margen de seguridad de cierre del 43%.
+            </p>
+          </div>
+        </div>
+
+        <!-- TABLA COMPARATIVA DE CICLO DE INYECCIÓN -->
+        <div class="card-glass rounded-2xl p-6 border border-slate-800 space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+            <span class="text-xs font-mono text-slate-300 font-semibold">Desglose de Tiempo de Ciclo (MFA)</span>
+            <span class="text-xs font-mono text-emerald-400">Optimizado: 12,04 s</span>
+          </div>
+
+          <div class="space-y-3 text-xs font-mono">
+            <div>
+              <div class="flex justify-between mb-1">
+                <span class="text-slate-400">Llenado Dinámico (Fill until switch-over)</span>
+                <span class="text-cyan-400">0,54 s (4,5%)</span>
+              </div>
+              <div class="w-full h-2 bg-slate-800 rounded-full overflow-hidden">
+                <div class="h-full bg-cyan-400 rounded-full" style="width: 4.5%"></div>
+              </div>
+            </div>
+
+            <div>
+              <div class="flex justify-between mb-1">
+                <span class="text-slate-400">Empaquetamiento & Presión Mantenimiento (Pack)</span>
+                <span class="text-blue-400">2,20 s (18,3%)</span>
+              </div>
+              <div class="w-full h-2 bg-slate-800 rounded-full overflow-hidden">
+                <div class="h-full bg-blue-400 rounded-full" style="width: 18.3%"></div>
+              </div>
+            </div>
+
+            <div>
+              <div class="flex justify-between mb-1">
+                <span class="text-slate-400">Enfriamiento Forzado (Cooling time)</span>
+                <span class="text-emerald-400">4,30 s (35,7%)</span>
+              </div>
+              <div class="w-full h-2 bg-slate-800 rounded-full overflow-hidden">
+                <div class="h-full bg-emerald-400 rounded-full" style="width: 35.7%"></div>
+              </div>
+            </div>
+
+            <div>
+              <div class="flex justify-between mb-1">
+                <span class="text-slate-400">Apertura de Molde & Expulsión (Mold open)</span>
+                <span class="text-slate-400">5,00 s (41,5%)</span>
+              </div>
+              <div class="w-full h-2 bg-slate-800 rounded-full overflow-hidden">
+                <div class="h-full bg-slate-500 rounded-full" style="width: 41.5%"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="p-3.5 bg-slate-900/80 rounded-xl border border-slate-800 text-[11px] font-mono space-y-1 text-slate-400">
+            <div class="flex justify-between text-slate-200">
+              <span>Cadencia de producción:</span>
+              <span class="text-emerald-400 font-bold">299 shots/hora (897 piezas/h)</span>
+            </div>
+            <div class="flex justify-between text-slate-200">
+              <span>Coste energético máquina:</span>
+              <span>2,13 €/h (0,0071 €/shot a 0,115 €/kWh)</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- INGENIERÍA DE FABRICACIÓN: MECANIZADO CNC & SANDVIK COROMANT -->
+  <section class="py-24 px-6 border-t border-slate-900 bg-slate-900/20">
+    <div class="max-w-6xl mx-auto space-y-16">
+      <div class="fade-up max-w-3xl">
+        <span class="text-xs font-mono text-cyan-400 uppercase tracking-wider">Manufactura & Mecanizado</span>
+        <h2 class="font-display text-3xl sm:text-4xl text-slate-100 font-bold mt-2">
+          Hojas de Proceso CNC: Placas de Cavidad y Núcleo
+        </h2>
+        <p class="mt-4 text-slate-400 leading-relaxed">
+          Diseño del proceso de arranque de viruta para la placa de cavidades y placa de núcleos sobre acero normalizado <b>HASCO K20 (296 × 296 × 22 mm, C45 / 1.1730)</b> e insertos de acero de baja aleación <b>Sandvik P2.1.Z.AN</b>.
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-8 fade-up">
+        
+        <!-- Tarjeta Cavidades -->
+        <div class="card-glass rounded-3xl p-8 space-y-5 border-t-2 border-t-cyan-400">
+          <div class="flex items-center justify-between">
+            <h3 class="font-display text-xl font-bold text-slate-100">Placa de Cavidades (13 Operaciones)</h3>
+            <span class="text-xs font-mono text-cyan-400 bg-cyan-950/40 border border-cyan-500/30 px-2.5 py-1 rounded">HASCO K20</span>
+          </div>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            Geometría de alta complejidad debido a las cavidades hembra microperforadas. Requiere operaciones de desbaste con fresa enteriza CoroMill y acabado de ultraprecisión con fresa de punta esférica de 2 mm.
+          </p>
+          <div class="space-y-1.5 text-xs font-mono text-slate-300 bg-slate-900/80 p-4 rounded-xl border border-slate-800">
+            <p>· Op 1: Planeado con fresa R200-038 (plaquitas redondas)</p>
+            <p>· Op 2-3: Desbaste 2F342 y acabado esférico 2B230 (R=2 mm)</p>
+            <p>· Op 4-8: Taladrado, mandrinado y avellanado de columnas guía</p>
+            <p>· Op 9-11: Perfilado cónico de canales y roscado M12</p>
+            <p>· Op 12-13: Taladrado y fresado de roscas Whitworth G1/8" (refrigeración)</p>
+          </div>
+          <div class="flex justify-between text-xs font-mono pt-1 text-slate-400 border-t border-slate-800">
+            <span>Tiempo de mecanizado estimado:</span>
+            <span class="text-cyan-400 font-bold">5,38 horas (19.371 s)</span>
+          </div>
+        </div>
+
+        <!-- Tarjeta Núcleos -->
+        <div class="card-glass rounded-3xl p-8 space-y-5 border-t-2 border-t-emerald-400">
+          <div class="flex items-center justify-between">
+            <h3 class="font-display text-xl font-bold text-slate-100">Placa de Núcleos (13 Operaciones)</h3>
+            <span class="text-xs font-mono text-emerald-400 bg-emerald-950/40 border border-emerald-500/30 px-2.5 py-1 rounded">Sandvik P2.1.Z.AN</span>
+          </div>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            Mecanizado de los postizos macho que dan forma interior al protector. Al presentar salientes cilíndricos más accesibles, el tiempo de ciclo en el centro de mecanizado se reduce drásticamente frente a la placa hembra.
+          </p>
+          <div class="space-y-1.5 text-xs font-mono text-slate-300 bg-slate-900/80 p-4 rounded-xl border border-slate-800">
+            <p>· Op 1-2: Planeado de desbaste para conformar machos cilíndricos</p>
+            <p>· Op 3: Acabado perimetral con fresa de ranurar R215.26</p>
+            <p>· Op 4-5: Taladrado y mandrinado para pozo frío central</p>
+            <p>· Op 6-9: Agujeros guía pasantes y perfilado de canales</p>
+            <p>· Op 10-13: Taladro inverso de expulsores y roscas refrigerantes G1/8"</p>
+          </div>
+          <div class="flex justify-between text-xs font-mono pt-1 text-slate-400 border-t border-slate-800">
+            <span>Tiempo de mecanizado estimado:</span>
+            <span class="text-emerald-400 font-bold">0,99 horas (3.573 s)</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ANÁLISIS DE COSTES HORARIOS Y SERIES -->
+      <div class="card-glass rounded-2xl p-6 sm:p-8 fade-up space-y-4">
+        <h4 class="font-display text-lg font-bold text-slate-100">Economía de Escala en Centro de Mecanizado CNC (82,22 €/h)</h4>
+        <p class="text-xs text-slate-400 leading-relaxed">
+          Evaluación de amortización de maquinaria (140.000 € anuales, 3 turnos, 1.752 h/año y 70% ocupación). Se demuestra cómo la amortización de tiempos de preparación y utillaje abarata el coste unitario del molde en series de 1.000 unidades:
+        </p>
+
+        <div class="grid sm:grid-cols-2 md:grid-cols-4 gap-4 pt-2 text-xs font-mono">
+          <div class="p-3 bg-slate-900/70 rounded-xl border border-slate-800">
+            <span class="text-slate-500 block mb-1">Placa Cavidad (Serie 1)</span>
+            <span class="text-rose-400 font-bold text-base num-tabular">7.554,12 €</span>
+          </div>
+          <div class="p-3 bg-slate-900/70 rounded-xl border border-slate-800">
+            <span class="text-slate-500 block mb-1">Placa Cavidad (Serie 1000)</span>
+            <span class="text-cyan-400 font-bold text-base num-tabular">3.278,36 €</span>
+          </div>
+          <div class="p-3 bg-slate-900/70 rounded-xl border border-slate-800">
+            <span class="text-slate-500 block mb-1">Placa Núcleo (Serie 1)</span>
+            <span class="text-rose-400 font-bold text-base num-tabular">5.512,24 €</span>
+          </div>
+          <div class="p-3 bg-slate-900/70 rounded-xl border border-slate-800">
+            <span class="text-slate-500 block mb-1">Placa Núcleo (Serie 1000)</span>
+            <span class="text-emerald-400 font-bold text-base num-tabular">1.278,44 €</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MODAL 1: PIEZA Y PLACAS 3D -->
+  <div id="piezaModal" class="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-md hidden items-center justify-center p-3 sm:p-6 transition-opacity duration-300">
+    <div class="relative max-w-5xl w-full max-h-[94vh] flex flex-col items-center">
+      <div class="w-full flex justify-between items-center mb-2.5 text-xs font-mono text-slate-400 px-1">
+        <span class="flex items-center gap-2 text-cyan-400 font-semibold">
+          <i data-lucide="layers" class="w-4 h-4"></i> Modelado 3D de Pieza, Placa de Cavidades y Placa de Núcleos
+        </span>
+        <button onclick="closeModal('piezaModal')" class="text-slate-400 hover:text-white flex items-center gap-1 transition-colors cursor-pointer">
+          <span>Cerrar (Esc)</span>
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+      <div class="w-full rounded-2xl overflow-hidden border border-slate-800 bg-slate-900 p-2 shadow-2xl max-h-[85vh] overflow-auto">
+        <img src="../assets/img/moldes-pieza-conjunto.png" alt="Conjunto 3D Alta Resolución" class="w-full h-auto min-w-[750px] object-contain rounded-lg">
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 2: LLENADO Y CANALES -->
+  <div id="llenadoModal" class="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-md hidden items-center justify-center p-3 sm:p-6 transition-opacity duration-300">
+    <div class="relative max-w-5xl w-full max-h-[94vh] flex flex-col items-center">
+      <div class="w-full flex justify-between items-center mb-2.5 text-xs font-mono text-slate-400 px-1">
+        <span class="flex items-center gap-2 text-emerald-400 font-semibold">
+          <i data-lucide="gauge" class="w-4 h-4"></i> Predicción de Calidad de Llenado & Canales Submarinos (MFA)
+        </span>
+        <button onclick="closeModal('llenadoModal')" class="text-slate-400 hover:text-white flex items-center gap-1 transition-colors cursor-pointer">
+          <span>Cerrar (Esc)</span>
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+      <div class="w-full rounded-2xl overflow-hidden border border-slate-800 bg-slate-900 p-2 shadow-2xl max-h-[85vh] overflow-auto">
+        <img src="../assets/img/moldes-simulacion-llenado.png" alt="Simulación Llenado Alta Resolución" class="w-full h-auto min-w-[750px] object-contain rounded-lg">
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 3: CIRCUITO DE REFRIGERACIÓN -->
+  <div id="refrigModal" class="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-md hidden items-center justify-center p-3 sm:p-6 transition-opacity duration-300">
+    <div class="relative max-w-5xl w-full max-h-[94vh] flex flex-col items-center">
+      <div class="w-full flex justify-between items-center mb-2.5 text-xs font-mono text-slate-400 px-1">
+        <span class="flex items-center gap-2 text-cyan-400 font-semibold">
+          <i data-lucide="snowflake" class="w-4 h-4"></i> Circuito de Refrigeración Forzada Conformal (MFA)
+        </span>
+        <button onclick="closeModal('refrigModal')" class="text-slate-400 hover:text-white flex items-center gap-1 transition-colors cursor-pointer">
+          <span>Cerrar (Esc)</span>
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+      <div class="w-full rounded-2xl overflow-hidden border border-slate-800 bg-slate-900 p-2 shadow-2xl max-h-[85vh] overflow-auto">
+        <img src="../assets/img/moldes-circuito-refrigeracion.png" alt="Circuito Refrigeración Alta Resolución" class="w-full h-auto min-w-[750px] object-contain rounded-lg">
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 4: ALABEO Y DEFLEXIÓN -->
+  <div id="alabeoModal" class="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-md hidden items-center justify-center p-3 sm:p-6 transition-opacity duration-300">
+    <div class="relative max-w-5xl w-full max-h-[94vh] flex flex-col items-center">
+      <div class="w-full flex justify-between items-center mb-2.5 text-xs font-mono text-slate-400 px-1">
+        <span class="flex items-center gap-2 text-blue-400 font-semibold">
+          <i data-lucide="ruler" class="w-4 h-4"></i> Mapa de Deflexión Total y Alabeo Térmico (Máx. 0,21 mm)
+        </span>
+        <button onclick="closeModal('alabeoModal')" class="text-slate-400 hover:text-white flex items-center gap-1 transition-colors cursor-pointer">
+          <span>Cerrar (Esc)</span>
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+      <div class="w-full rounded-2xl overflow-hidden border border-slate-800 bg-slate-900 p-2 shadow-2xl max-h-[85vh] overflow-auto">
+        <img src="../assets/img/moldes-mapa-alabeo.png" alt="Mapa de Deflexión Alta Resolución" class="w-full h-auto min-w-[750px] object-contain rounded-lg">
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 5: HOJA DE FASE CNC -->
+  <div id="cncModal" class="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-md hidden items-center justify-center p-3 sm:p-6 transition-opacity duration-300">
+    <div class="relative max-w-6xl w-full max-h-[94vh] flex flex-col items-center">
+      <div class="w-full flex justify-between items-center mb-2.5 text-xs font-mono text-slate-400 px-1">
+        <span class="flex items-center gap-2 text-cyan-400 font-semibold">
+          <i data-lucide="file-spreadsheet" class="w-4 h-4"></i> Plano de Taller Acotado & Herramientas Sandvik Coromant
+        </span>
+        <button onclick="closeModal('cncModal')" class="text-slate-400 hover:text-white flex items-center gap-1 transition-colors cursor-pointer">
+          <span>Cerrar (Esc)</span>
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+      <div class="w-full rounded-2xl overflow-hidden border border-slate-800 bg-white p-3 shadow-2xl max-h-[85vh] overflow-auto">
+        <img src="../assets/img/moldes-hoja-fase-cnc.png" alt="Plano Acotado CNC Alta Resolución" class="w-full h-auto min-w-[900px] object-contain rounded-lg">
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER NAVEGACIÓN -->
+  <footer class="py-16 px-6 border-t border-slate-900 bg-slate-950">
+    <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-6">
+      <div>
+        <p class="text-xs font-mono text-slate-500 uppercase tracking-wider">Conoce más sobre mi perfil</p>
+        <a href="../sobre-mi.html" class="font-display text-2xl text-slate-100 font-bold hover:text-cyan-400 transition-colors inline-flex items-center gap-2 mt-1">
+          Trayectoria & Perfil Profesional <i data-lucide="arrow-right" class="w-5 h-5"></i>
+        </a>
+      </div>
+      
+      <div class="flex items-center gap-4">
+        <a href="../assets/docs/Memoria_Moldeo_Mecanizado.pdf" download class="inline-flex items-center gap-2 border border-slate-800 hover:border-slate-600 text-slate-300 px-4 py-2 rounded-lg text-xs font-mono transition-colors">
+          <i data-lucide="download" class="w-3.5 h-3.5"></i> Descargar Memoria Técnica
+        </a>
+        <a href="../index.html" class="inline-flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-slate-200 px-4 py-2 rounded-lg text-xs font-mono transition-colors">
+          Inicio
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- SCRIPTS -->
+  <script>
+    lucide.createIcons();
+
+    // Scroll Navbar Effect
+    const navInner = document.getElementById('navInner');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 20) {
+        navInner.classList.add('shadow-lg', 'shadow-black/40', 'border-slate-700/80');
+      } else {
+        navInner.classList.remove('shadow-lg', 'shadow-black/40', 'border-slate-700/80');
+      }
+    });
+
+    // Observer idéntico al index.html
+    const revealEls = document.querySelectorAll('.fade-up');
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('in');
+        } else {
+          e.target.classList.remove('in');
+        }
+      });
+    }, { 
+      threshold: 0.12, 
+      rootMargin: "0px 0px -50px 0px" 
+    });
+    revealEls.forEach(el => io.observe(el));
+
+   // Control dinámico de las 5 pestañas de Moldes
+    let activeMoldView = 'pieza';
+
+    function switchMoldView(view) {
+      activeMoldView = view;
+      const views = ['pieza', 'llenado', 'refrig', 'alabeo', 'cnc'];
+      
+      views.forEach(v => {
+        const viewEl = document.getElementById('view' + v.charAt(0).toUpperCase() + v.slice(1));
+        const btnEl = document.getElementById('tabBtn' + v.charAt(0).toUpperCase() + v.slice(1));
+        
+        if (viewEl && btnEl) {
+          if (v === view) {
+            viewEl.classList.remove('hidden');
+            btnEl.className = 'px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-mono font-medium transition-colors bg-cyan-400 text-slate-950 cursor-pointer';
+          } else {
+            viewEl.classList.add('hidden');
+            btnEl.className = 'px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-mono font-medium transition-colors text-slate-400 hover:text-slate-200 cursor-pointer';
+          }
+        }
+      });
+    }
+
+    function openCurrentMoldModal() {
+      openModal(activeMoldView + 'Modal');
+    }
+
+    // Funciones modales
+    function openModal(id) {
+      const modal = document.getElementById(id);
+      if (!modal) return;
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      document.body.style.overflow = 'hidden';
+      lucide.createIcons();
+    }
+
+    function closeModal(id) {
+      const modal = document.getElementById(id);
+      if (!modal) return;
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+      document.body.style.overflow = '';
+    }
+
+    // Listeners para cerrar al hacer clic en el fondo oscuro
+    ['piezaModal', 'llenadoModal', 'refrigModal', 'alabeoModal', 'cncModal'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.addEventListener('click', function(e) {
+          if (e.target === this) closeModal(id);
+        });
+      }
+    });
+
+    // Cierre con Escape
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeModal('piezaModal');
+        closeModal('llenadoModal');
+        closeModal('refrigModal');
+        closeModal('alabeoModal');
+        closeModal('cncModal');
+      }
+    });
+  </script>
+</body>
+</html>

@@ -155,7 +155,7 @@
         </div>
       </div>
 
-      <!-- VISOR PRINCIPAL: GALERÍA INTERACTIVA DE PANTALLAS CHEMEXCHANGE -->
+      <!-- VISOR PRINCIPAL: GALERÍA DE PANTALLAS CHEMEXCHANGE -->
       <div class="fade-up card-glass rounded-2xl p-5 sm:p-7 border border-slate-800 shadow-2xl relative overflow-hidden">
         <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-4 border-b border-slate-800 pb-3">
           
@@ -180,40 +180,56 @@
           </button>
         </div>
 
-        <!-- VISTA 1: CATÁLOGO PRINCIPAL -->
-        <div id="viewCatalog" onclick="openModal('catalogModal')" class="rounded-xl overflow-hidden border border-slate-800 bg-slate-950/80 cursor-zoom-in group relative">
-          <img src="../assets/img/tfg-chemexchange-catalog.png" alt="Catálogo General ChemExchange" class="w-full h-auto object-contain max-h-[460px] group-hover:scale-[1.01] transition-transform duration-300">
-          <div class="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 text-white font-mono text-xs">
-            <i data-lucide="zoom-in" class="w-5 h-5 text-blue-400"></i> Clic para inspeccionar catálogo y filtros dinámicos
+        <!-- MARCO ADAPTABLE TIPO NAVEGADOR -->
+        <div class="rounded-xl overflow-hidden border border-slate-800 bg-slate-900 shadow-inner">
+          
+          <!-- Barra superior tipo navegador -->
+          <div class="h-8 bg-slate-900 border-b border-slate-800/80 px-4 flex items-center justify-between select-none">
+            <div class="flex items-center gap-1.5">
+              <span class="w-2.5 h-2.5 rounded-full bg-rose-500/80"></span>
+              <span class="w-2.5 h-2.5 rounded-full bg-amber-500/80"></span>
+              <span class="w-2.5 h-2.5 rounded-full bg-emerald-500/80"></span>
+            </div>
+            <span class="text-[11px] font-mono text-slate-500 hidden sm:inline-block">localhost/alumno085/chemexchange</span>
+            <div class="w-10"></div>
           </div>
-        </div>
 
-        <!-- VISTA 2: FICHA DETALLE TÉCNICO -->
-        <div id="viewDetail" onclick="openModal('detailModal')" class="hidden rounded-xl overflow-hidden border border-slate-800 bg-slate-950/80 cursor-zoom-in group relative">
-          <img src="../assets/img/tfg-chemexchange-detail.png" alt="Ficha Técnica de Subproducto ChemExchange" class="w-full h-auto object-contain max-h-[460px] group-hover:scale-[1.01] transition-transform duration-300">
-          <div class="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 text-white font-mono text-xs">
-            <i data-lucide="zoom-in" class="w-5 h-5 text-blue-400"></i> Clic para ver especificaciones de pureza, pH y clasificación CLP
+          <!-- VISTA 1: CATÁLOGO -->
+          <div id="viewCatalog" onclick="openModal('catalogModal')" class="w-full cursor-zoom-in group relative overflow-hidden">
+            <img src="../assets/img/tfg-chemexchange-catalog.png" alt="Catálogo General ChemExchange" class="w-full h-auto block group-hover:scale-[1.01] transition-transform duration-300">
+            <div class="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 text-white font-mono text-xs">
+              <i data-lucide="zoom-in" class="w-5 h-5 text-blue-400"></i> Clic para inspeccionar catálogo y filtros dinámicos
+            </div>
           </div>
-        </div>
 
-        <!-- VISTA 3: PUBLICACIÓN DE OFERTA -->
-        <div id="viewPublicar" onclick="openModal('publicarModal')" class="hidden rounded-xl overflow-hidden border border-slate-800 bg-slate-950/80 cursor-zoom-in group relative">
-          <img src="../assets/img/tfg-chemexchange-publicar.png" alt="Formulario de Publicación Técnica ChemExchange" class="w-full h-auto object-contain max-h-[460px] group-hover:scale-[1.01] transition-transform duration-300">
-          <div class="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 text-white font-mono text-xs">
-            <i data-lucide="zoom-in" class="w-5 h-5 text-blue-400"></i> Clic para ver formulario técnico y validación de atributos
+          <!-- VISTA 2: FICHA DETALLE -->
+          <div id="viewDetail" onclick="openModal('detailModal')" class="hidden w-full cursor-zoom-in group relative overflow-hidden">
+            <img src="../assets/img/tfg-chemexchange-detail.png" alt="Ficha Técnica ChemExchange" class="w-full h-auto block group-hover:scale-[1.01] transition-transform duration-300">
+            <div class="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 text-white font-mono text-xs">
+              <i data-lucide="zoom-in" class="w-5 h-5 text-blue-400"></i> Clic para ver especificaciones técnicas
+            </div>
           </div>
-        </div>
 
-        <!-- VISTA 4: ASISTENTE VIRTUAL CHEMBOT -->
-        <div id="viewChembot" onclick="openModal('chembotModal')" class="hidden rounded-xl overflow-hidden border border-slate-800 bg-slate-950/80 cursor-zoom-in group relative">
-          <img src="../assets/img/tfg-chemexchange-chembot.png" alt="Asistente Conversacional ChemBot RAG" class="w-full h-auto object-contain max-h-[460px] group-hover:scale-[1.01] transition-transform duration-300">
-          <div class="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 text-white font-mono text-xs">
-            <i data-lucide="zoom-in" class="w-5 h-5 text-blue-400"></i> Clic para inspeccionar diálogo RAG y enlaces dinámicos
+          <!-- VISTA 3: PUBLICAR OFERTA -->
+          <div id="viewPublicar" onclick="openModal('publicarModal')" class="hidden w-full cursor-zoom-in group relative overflow-hidden">
+            <img src="../assets/img/tfg-chemexchange-publicar.png" alt="Formulario de Publicación" class="w-full h-auto block group-hover:scale-[1.01] transition-transform duration-300">
+            <div class="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 text-white font-mono text-xs">
+              <i data-lucide="zoom-in" class="w-5 h-5 text-blue-400"></i> Clic para ver formulario técnico
+            </div>
           </div>
+
+          <!-- VISTA 4: CHEMBOT -->
+          <div id="viewChembot" onclick="openModal('chembotModal')" class="hidden w-full cursor-zoom-in group relative overflow-hidden">
+            <img src="../assets/img/tfg-chemexchange-chembot.png" alt="ChemBot RAG" class="w-full h-auto block group-hover:scale-[1.01] transition-transform duration-300">
+            <div class="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 text-white font-mono text-xs">
+              <i data-lucide="zoom-in" class="w-5 h-5 text-blue-400"></i> Clic para inspeccionar asistente RAG
+            </div>
+          </div>
+
         </div>
 
         <p class="text-xs text-slate-500 text-center mt-3 font-mono">
-          Ecosistema integral ChemExchange: exploración multi-filtro $\rightarrow$ verificación analítica $\rightarrow$ alta de corrientes $\rightarrow$ consultoría contextual RAG.
+          Ecosistema integral ChemExchange: exploración multi-filtro → verificación analítica → alta de corrientes → consultoría contextual RAG.
         </p>
       </div>
 
@@ -391,7 +407,7 @@
       <div class="fade-up card-glass rounded-2xl p-6 border border-slate-800 shadow-2xl overflow-hidden">
         <div class="flex items-center justify-between mb-4 border-b border-slate-800 pb-3">
           <span class="text-xs font-mono text-slate-300 font-semibold uppercase">Flujo de Información del Microservicio RAG</span>
-          <span class="text-xs font-mono text-blue-400">Fetch API $\rightarrow$ PHP PDO $\rightarrow$ Google Gemini Flash</span>
+          <span class="text-xs font-mono text-blue-400">Fetch API → PHP PDO → Google Gemini Flash</span>
         </div>
 
         <div class="w-full overflow-x-auto pb-2">
@@ -460,7 +476,7 @@
             <i data-lucide="shield-alert" class="w-4 h-4 text-emerald-400"></i> Ciberseguridad & Sanitización
           </h4>
           <p class="text-xs text-slate-400 leading-relaxed">
-            Todas las consultas utilizan sentencias preparadas nativas en PDO contra inyecciones SQL (verificadas con vectores de ataque como `' OR '1'='1`). Las contraseñas se almacenan mediante hashes criptográficos asimétricos con <code>password_hash(Bcrypt)</code>.
+            Todas las consultas utilizan sentencias preparadas nativas en PDO contra inyecciones SQL (verificadas con vectores de ataque como <code>' OR '1'='1</code>). Las contraseñas se almacenan mediante hashes criptográficos asimétricos con <code>password_hash(Bcrypt)</code>.
           </p>
         </div>
 
@@ -585,6 +601,64 @@
     </div>
   </div>
 
+  <!-- MODAL 3: PUBLICAR OFERTA EN ALTA RESOLUCIÓN -->
+  <div id="publicarModal" class="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-md hidden items-center justify-center p-3 sm:p-6 transition-opacity duration-300">
+    <div class="relative max-w-5xl w-full max-h-[94vh] flex flex-col items-center">
+      <div class="w-full flex justify-between items-center mb-2.5 text-xs font-mono text-slate-400 px-1">
+        <span class="flex items-center gap-2 text-blue-400 font-semibold">
+          <i data-lucide="plus-circle" class="w-4 h-4"></i> Formulario de Parametrización Analítica (publicar.php)
+        </span>
+        <button onclick="closeModal('publicarModal')" class="text-slate-400 hover:text-white flex items-center gap-1 transition-colors cursor-pointer">
+          <span>Cerrar (Esc)</span>
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+      <div class="w-full rounded-2xl overflow-hidden border border-slate-800 bg-white p-2 shadow-2xl max-h-[85vh] overflow-auto">
+        <img src="../assets/img/tfg-chemexchange-publicar.png" alt="Formulario Publicar Alta Resolución" class="w-full h-auto min-w-[700px] object-contain rounded-lg">
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 4: CHEMBOT RAG EN ALTA RESOLUCIÓN -->
+  <div id="chembotModal" class="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-md hidden items-center justify-center p-3 sm:p-6 transition-opacity duration-300">
+    <div class="relative max-w-4xl w-full max-h-[94vh] flex flex-col items-center">
+      <div class="w-full flex justify-between items-center mb-2.5 text-xs font-mono text-slate-400 px-1">
+        <span class="flex items-center gap-2 text-emerald-400 font-semibold">
+          <i data-lucide="bot" class="w-4 h-4"></i> Asistente Conversacional RAG Acoplado a MySQL (ChemBot)
+        </span>
+        <button onclick="closeModal('chembotModal')" class="text-slate-400 hover:text-white flex items-center gap-1 transition-colors cursor-pointer">
+          <span>Cerrar (Esc)</span>
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+      <div class="w-full rounded-2xl overflow-hidden border border-slate-800 bg-white p-2 shadow-2xl max-h-[85vh] overflow-auto">
+        <img src="../assets/img/tfg-chemexchange-chembot.png" alt="ChemBot RAG Alta Resolución" class="w-full h-auto min-w-[600px] object-contain rounded-lg">
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL / LIGHTBOX PARA EL DIAGRAMA E-R EN ALTA DEFINICIÓN -->
+  <div id="erModal" class="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-md hidden items-center justify-center p-3 sm:p-6 transition-opacity duration-300">
+    <div class="relative max-w-5xl w-full max-h-[94vh] flex flex-col items-center">
+      <div class="w-full flex justify-between items-center mb-2.5 text-xs font-mono text-slate-400 px-1">
+        <span class="flex items-center gap-2 text-emerald-400 font-semibold">
+          <i data-lucide="database" class="w-4 h-4"></i> Modelo Entidad-Relación Completo (ChemExchange MySQL)
+        </span>
+        <button onclick="closeModal('erModal')" class="text-slate-400 hover:text-white flex items-center gap-1 transition-colors cursor-pointer">
+          <span>Cerrar (Esc)</span>
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+      <div class="w-full rounded-2xl overflow-hidden border border-slate-800 bg-white p-4 shadow-2xl max-h-[85vh] overflow-auto">
+        <img src="../assets/img/tfg-diagrama-er.png" alt="Diagrama E-R Alta Resolución" class="w-full h-auto min-w-[750px] object-contain rounded-lg">
+      </div>
+      <div class="w-full p-2.5 bg-slate-950/90 mt-2 rounded-xl border border-slate-800 text-[11px] font-mono flex flex-wrap justify-between items-center gap-2 text-slate-400">
+        <span>Claves foráneas: fk_vendedor (Clientes-Productos) con ON DELETE SET NULL</span>
+        <span class="text-emerald-400">Atributos técnicos parametrizados: pH, pureza, CLP, estado físico y precio unitario</span>
+      </div>
+    </div>
+  </div>
+
   <!-- FOOTER NAVEGACIÓN -->
   <footer class="py-16 px-6 border-t border-slate-900 bg-slate-950">
     <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-6">
@@ -647,12 +721,14 @@
         const viewEl = document.getElementById('view' + v.charAt(0).toUpperCase() + v.slice(1));
         const btnEl = document.getElementById('tabBtn' + v.charAt(0).toUpperCase() + v.slice(1));
         
-        if (v === view) {
-          viewEl.classList.remove('hidden');
-          btnEl.className = 'px-3 py-1.5 rounded-lg text-xs font-mono font-medium transition-colors bg-blue-500 text-slate-950 cursor-pointer';
-        } else {
-          viewEl.classList.add('hidden');
-          btnEl.className = 'px-3 py-1.5 rounded-lg text-xs font-mono font-medium transition-colors text-slate-400 hover:text-slate-200 cursor-pointer';
+        if (viewEl && btnEl) {
+          if (v === view) {
+            viewEl.classList.remove('hidden');
+            btnEl.className = 'px-3 py-1.5 rounded-lg text-xs font-mono font-medium transition-colors bg-blue-500 text-slate-950 cursor-pointer';
+          } else {
+            viewEl.classList.add('hidden');
+            btnEl.className = 'px-3 py-1.5 rounded-lg text-xs font-mono font-medium transition-colors text-slate-400 hover:text-slate-200 cursor-pointer';
+          }
         }
       });
     }
@@ -660,6 +736,7 @@
     function openCurrentTfgModal() {
       openModal(activeTfgView + 'Modal');
     }
+
     // Funciones modales
     function openModal(id) {
       const modal = document.getElementById(id);
@@ -678,7 +755,8 @@
       document.body.style.overflow = '';
     }
 
-    ['catalogModal', 'detailModal'].forEach(id => {
+    // Listeners para cerrar al hacer clic en el fondo oscuro
+    ['catalogModal', 'detailModal', 'publicarModal', 'chembotModal', 'erModal'].forEach(id => {
       const el = document.getElementById(id);
       if (el) {
         el.addEventListener('click', function(e) {
@@ -687,72 +765,16 @@
       }
     });
 
+    // Cierre con Escape
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') {
         closeModal('catalogModal');
         closeModal('detailModal');
+        closeModal('publicarModal');
+        closeModal('chembotModal');
         closeModal('erModal');
-        closeModal('publicarModal')
-        closeModal('chembotModal')
       }
     });
   </script>
-
-  <!-- MODAL / LIGHTBOX PARA EL DIAGRAMA E-R EN ALTA DEFINICIÓN -->
-  <div id="erModal" class="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-md hidden items-center justify-center p-3 sm:p-6 transition-opacity duration-300">
-    <div class="relative max-w-5xl w-full max-h-[94vh] flex flex-col items-center">
-      <div class="w-full flex justify-between items-center mb-2.5 text-xs font-mono text-slate-400 px-1">
-        <span class="flex items-center gap-2 text-emerald-400 font-semibold">
-          <i data-lucide="database" class="w-4 h-4"></i> Modelo Entidad-Relación Completo (ChemExchange MySQL)
-        </span>
-        <button onclick="closeModal('erModal')" class="text-slate-400 hover:text-white flex items-center gap-1 transition-colors cursor-pointer">
-          <span>Cerrar (Esc)</span>
-          <i data-lucide="x" class="w-4 h-4"></i>
-        </button>
-      </div>
-      <div class="w-full rounded-2xl overflow-hidden border border-slate-800 bg-white p-4 shadow-2xl max-h-[85vh] overflow-auto">
-        <img src="../assets/img/tfg-diagrama-er.png" alt="Diagrama E-R Alta Resolución" class="w-full h-auto min-w-[750px] object-contain rounded-lg">
-      </div>
-      <div class="w-full p-2.5 bg-slate-950/90 mt-2 rounded-xl border border-slate-800 text-[11px] font-mono flex flex-wrap justify-between items-center gap-2 text-slate-400">
-        <span>Claves foráneas: fk_vendedor (Clientes-Productos) con ON DELETE SET NULL</span>
-        <span class="text-emerald-400">Atributos técnicos parametrizados: pH, pureza, CLP, estado físico y precio unitario</span>
-      </div>
-    </div>
-  </div>
-  <!-- MODAL 3: PUBLICAR OFERTA EN ALTA RESOLUCIÓN -->
-  <div id="publicarModal" class="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-md hidden items-center justify-center p-3 sm:p-6 transition-opacity duration-300">
-    <div class="relative max-w-5xl w-full max-h-[94vh] flex flex-col items-center">
-      <div class="w-full flex justify-between items-center mb-2.5 text-xs font-mono text-slate-400 px-1">
-        <span class="flex items-center gap-2 text-blue-400 font-semibold">
-          <i data-lucide="plus-circle" class="w-4 h-4"></i> Formulario de Parametrización Analítica (publicar.php)
-        </span>
-        <button onclick="closeModal('publicarModal')" class="text-slate-400 hover:text-white flex items-center gap-1 transition-colors cursor-pointer">
-          <span>Cerrar (Esc)</span>
-          <i data-lucide="x" class="w-4 h-4"></i>
-        </button>
-      </div>
-      <div class="w-full rounded-2xl overflow-hidden border border-slate-800 bg-white p-2 shadow-2xl max-h-[85vh] overflow-auto">
-        <img src="../assets/img/tfg-chemexchange-publicar.png" alt="Formulario Publicar Alta Resolución" class="w-full h-auto min-w-[700px] object-contain rounded-lg">
-      </div>
-    </div>
-  </div>
-
-  <!-- MODAL 4: CHEMBOT RAG EN ALTA RESOLUCIÓN -->
-  <div id="chembotModal" class="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-md hidden items-center justify-center p-3 sm:p-6 transition-opacity duration-300">
-    <div class="relative max-w-4xl w-full max-h-[94vh] flex flex-col items-center">
-      <div class="w-full flex justify-between items-center mb-2.5 text-xs font-mono text-slate-400 px-1">
-        <span class="flex items-center gap-2 text-emerald-400 font-semibold">
-          <i data-lucide="bot" class="w-4 h-4"></i> Asistente Conversacional RAG Acoplado a MySQL (ChemBot)
-        </span>
-        <button onclick="closeModal('chembotModal')" class="text-slate-400 hover:text-white flex items-center gap-1 transition-colors cursor-pointer">
-          <span>Cerrar (Esc)</span>
-          <i data-lucide="x" class="w-4 h-4"></i>
-        </button>
-      </div>
-      <div class="w-full rounded-2xl overflow-hidden border border-slate-800 bg-white p-2 shadow-2xl max-h-[85vh] overflow-auto">
-        <img src="../assets/img/tfg-chemexchange-chembot.png" alt="ChemBot RAG Alta Resolución" class="w-full h-auto min-w-[600px] object-contain rounded-lg">
-      </div>
-    </div>
-  </div>
 </body>
 </html>
